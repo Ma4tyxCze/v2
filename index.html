@@ -1635,12 +1635,11 @@ async function checkAppVersion(){
 }
 function openContactsPdf(){
 
-  document.getElementById("pdfFrame").src =
-    "./pdfs/kontakty.pdf"
+  const url = "./pdfs/kontakty.pdf"
 
-  document.getElementById("pdfViewer").style.display =
-    "block"
+  window.open(url, "_blank")
 
+  showToast("Pro návrat přejeď prstem doleva")
 }
 </script>
  <div id="statsPopup" class="contactPopup">
