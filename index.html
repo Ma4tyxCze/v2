@@ -208,33 +208,32 @@ cursor:pointer;
 display:flex;
 gap:12px;
 margin-bottom:25px;
+width:100%;
 }
 
-#gvdSelect{
-flex:2;
-height:60px;
-font-size:20px;
-font-weight:bold;
-border-radius:14px;
-border:none;
-background:#FFD400;
-color:black;
-text-align:center;
-text-align-last:center;
+#gvdSelect,
+.addBtn{
+min-width:0;
 }
 
 .addBtn{
 flex:1;
+min-width:120px;
+
 height:60px;
 font-size:20px;
 font-weight:bold;
 border-radius:14px;
-background:#FFD400;
-color:black;
+
 display:flex;
 align-items:center;
 justify-content:center;
-cursor:pointer;
+
+text-align:center;
+
+/* 👇 nové */
+word-break:break-word;
+overflow:hidden;
 }
 .popupHint{
   font-size:14px;
