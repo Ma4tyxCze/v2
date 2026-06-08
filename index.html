@@ -218,7 +218,8 @@ font-size:20px;
 font-weight:bold;
 border-radius:14px;
 border:none;
-
+text-align:center;
+text-align-last:center;
 background:#FFD400;
 color:black;
 
@@ -227,8 +228,14 @@ appearance:none;
 }
 
 .addBtn{
-flex:1;
-min-width:120px;
+flex:0.85;
+min-width:0;
+
+font-size:18px;
+line-height:1.1;
+padding:0 8px;
+box-sizing:border-box;
+}
 
 height:60px;
 font-size:20px;
@@ -682,7 +689,7 @@ Aplikace neobsahuje žádné reklamy, stahování souborů ani sběr osobních �
 <option value="48">Prázdniny Neděle 48</option>
 </select> 
 
-<button class="addBtn" onclick="openPopup()">Přidat prohoz</button>
+<button class="addBtn" onclick="openPopup()">Přidat<br>prohoz</button>
 </div>
 
 <h2>Vyhledání směny</h2>
