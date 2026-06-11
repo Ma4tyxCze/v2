@@ -523,7 +523,7 @@ overflow-y:auto;
   z-index:100000;
 }
 .metroContent{
-padding:20px 80px;
+padding:20px 60px;
 padding-top:70px;
 }
 
@@ -1848,7 +1848,7 @@ metroBStations.forEach((station,index)=>{
     display:flex;
     align-items:center;
     justify-content:center;
-    min-height:58px;
+    min-height:70px;
     position:relative;
   ">
 
@@ -1877,15 +1877,13 @@ ${leftTrains.map(v => `
   <div
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
-    background:${
-      v.delay > 60
-        ? "#ff4d4d"
-        : v.delay > 15
-          ? "#ff9f1a"
-          : v.delay < 0
-            ? "#3ddc84"
-            : "#FFD400"
-    };
+   background:${
+  v.delay >= 60
+    ? "#ff4d4d"   // 🔴 60 s a více
+    : v.delay >= 30
+      ? "#ff9f1a" // 🟠 30–59 s
+      : "#3ddc84" // 🟢 do 29 s
+};
 
     color:${
       v.delay > 15 || v.delay < 0
@@ -1893,9 +1891,10 @@ ${leftTrains.map(v => `
         : "black"
     };
 
-    padding:3px 8px;
+    padding:5px 10px;
     border-radius:8px;
     font-weight:bold;
+    font-size:16px;
     cursor:pointer;
   ">
     B/${v.obeh}
@@ -1916,25 +1915,23 @@ ${rightTrains.map(v => `
   <div
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
-    background:${
-      v.delay > 60
-        ? "#ff4d4d"
-        : v.delay > 15
-          ? "#ff9f1a"
-          : v.delay < 0
-            ? "#3ddc84"
-            : "#FFD400"
-    };
-
+   background:${
+  v.delay >= 60
+    ? "#ff4d4d"   // 🔴 60 s a více
+    : v.delay >= 30
+      ? "#ff9f1a" // 🟠 30–59 s
+      : "#3ddc84" // 🟢 do 29 s
+};
     color:${
       v.delay > 15 || v.delay < 0
         ? "white"
         : "black"
     };
 
-    padding:3px 8px;
+    padding:5px 10px;
     border-radius:8px;
     font-weight:bold;
+    font-size:16px;
     cursor:pointer;
   ">
     B/${v.obeh}
