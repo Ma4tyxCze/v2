@@ -1822,36 +1822,49 @@ data.forEach(vlak => {
 alert(debug)
     let html = ""
 
-    metroBStations.forEach((station,index) => {
+   data.sort((a,b) => {
 
-  const isTerminal =
-    station === "Černý Most" ||
-    station === "Zličín"
+  const obehA = Number(a.obeh)
+  const obehB = Number(b.obeh)
+
+  return obehA - obehB
+
+})
+
+data.forEach(vlak => {
+
+  const delay =
+    vlak.delay > 0
+      ? "+" + vlak.delay + "s"
+      : vlak.delay + "s"
 
   html += `
   <div style="
     display:flex;
-    flex-direction:column;
-    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+    margin:8px 0;
+
+    color:white;
+    font-size:18px;
   ">
 
-    ${index > 0 ? `
     <div style="
-      width:4px;
-      height:50px;
       background:#FFD400;
-    "></div>
-    ` : ""}
+      color:black;
 
-    <div style="
-      font-size:${isTerminal ? "24px" : "18px"};
-      color:${isTerminal ? "#FFD400" : "white"};
-      font-weight:${isTerminal ? "bold" : "normal"};
-      text-align:center;
+      padding:3px 8px;
+      border-radius:8px;
+
+      font-weight:bold;
+      min-width:50px;
     ">
-      ${isTerminal
-        ? station.toUpperCase()
-        : station}
+      B/${vlak.obeh}
+    </div>
+
+    <div>
+      ${delay}
     </div>
 
   </div>
@@ -1870,31 +1883,7 @@ alert(debug)
   }
 
 }
-function nearestStation(lat, lon){
 
-  let bestStation = ""
-  let bestDistance = Infinity
-
-  for(const station in metroCoords){
-
-    const stationLat = metroCoords[station][0]
-    const stationLon = metroCoords[station][1]
-
-    const distance =
-      Math.abs(lat - stationLat) +
-      Math.abs(lon - stationLon)
-
-    if(distance < bestDistance){
-
-      bestDistance = distance
-      bestStation = station
-
-    }
-
-  }
-
-  return bestStation
-}
   
   function closeMetroPopup(){
   document.getElementById("metroPopup").style.display = "none"
