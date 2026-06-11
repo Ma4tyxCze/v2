@@ -1766,24 +1766,26 @@ function openMetroPopup(){
 
   let html = ""
 
-  metroBStations.forEach(station => {
+  metroBStations.forEach((station,index) => {
 
-    const isTerminal =
-      station === "Černý Most" ||
-      station === "Zličín"
+  const isTerminal =
+    station === "Černý Most" ||
+    station === "Zličín"
 
-    html += `
+  html += `
 <div style="
   display:flex;
   flex-direction:column;
   align-items:center;
 ">
 
+  ${index > 0 ? `
   <div style="
     width:4px;
-    height:32px;
+    height:40px;
     background:#FFD400;
   "></div>
+  ` : ""}
 
   <div style="
     font-size:${isTerminal ? "24px" : "18px"};
@@ -1798,8 +1800,7 @@ function openMetroPopup(){
 
 </div>
 `
-
-  })
+})
 
   document.getElementById("metroLine").innerHTML = html
 
