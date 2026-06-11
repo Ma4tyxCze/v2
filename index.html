@@ -808,7 +808,8 @@ Před odesláním kontrolujte správnost GVD a číslo směny
 let userEmail = localStorage.getItem("prohozy_user")
 let selectedSheet="50"
 let savedScrollY = 0
-const input=document.getElementById("shiftInput")
+let metroInterval = null
+  const input=document.getElementById("shiftInput")
 const result=document.getElementById("result")
 const gvdSelect=document.getElementById("gvdSelect")
   const metroBStations = [
@@ -1789,9 +1790,11 @@ function openContactsPdf(){
   showToast("Pro návrat přejeď prstem doleva")
 }
 
-async function openMetroPopup(){
+async function openMetroPopup(isRefresh = false){
 
-  document.getElementById("metroPopup").style.display = "block"
+ if(!isRefresh){
+  document.getElementById("metroPopup").style.display = "flex"
+}
 
   document.getElementById("metroLine").innerHTML =
     "Načítám Metro B..."
@@ -1941,7 +1944,13 @@ ${rightTrains.map(v => `
       "Chyba načítání"
 
   }
+if(metroInterval){
+  clearInterval(metroInterval)
+}
 
+metroInterval = setInterval(() => {
+  openMetroPopup(true)
+}, 20000)
 }
 
   function nearestStation(lat, lon){
@@ -1973,6 +1982,10 @@ ${rightTrains.map(v => `
   
   function closeMetroPopup(){
   document.getElementById("metroPopup").style.display = "none"
+    if(metroInterval){
+  clearInterval(metroInterval)
+  metroInterval = null
+}
 }
 </script>
  <div id="statsPopup" class="contactPopup">
