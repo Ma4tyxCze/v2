@@ -2061,11 +2061,35 @@ metroInterval = setInterval(() => {
       await response.json()
 
     const stops =
-      detail.stop_times?.features || []
+  detail.stop_times?.features || []
 
-    let stopsHtml = ""
+let startIndex = 0
+let bestDistance = Infinity
 
-    stops.forEach(stop => {
+stops.forEach((stop,index)=>{
+
+  const stopLat =
+    stop.geometry.coordinates[1]
+
+  const stopLon =
+    stop.geometry.coordinates[0]
+
+  const distance =
+    Math.abs(vlak.lat - stopLat) +
+    Math.abs(vlak.lon - stopLon)
+
+  if(distance < bestDistance){
+
+    bestDistance = distance
+    startIndex = index
+
+  }
+
+})
+
+let stopsHtml = ""
+
+    stops.slice(startIndex).forEach(stop => {
 
       const p = stop.properties
 
