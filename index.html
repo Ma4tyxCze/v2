@@ -2053,10 +2053,9 @@ metroInterval = setInterval(() => {
   try{
 
     const response = await fetch(
-      API_URL +
-      "/api/metro-detail?tripId=" +
-      encodeURIComponent(vlak.tripId)
-    )
+  "https://prohozy-api.marty-protiva.workers.dev/api/metro-detail?tripId=" +
+  encodeURIComponent(vlak.tripId)
+)
 
     const detail =
       await response.json()
