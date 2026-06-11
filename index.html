@@ -1780,20 +1780,42 @@ async function openMetroPopup(){
 
     let html = ""
 
-    data.forEach(vlak => {
+    metroBStations.forEach((station,index) => {
 
-      html += `
-      <div style="
-        color:#FFD400;
-        text-align:center;
-        margin:10px 0;
-        font-weight:bold;
-      ">
-        B/${vlak.obeh}
-      </div>
-      `
+  const isTerminal =
+    station === "Černý Most" ||
+    station === "Zličín"
 
-    })
+  html += `
+  <div style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  ">
+
+    ${index > 0 ? `
+    <div style="
+      width:4px;
+      height:50px;
+      background:#FFD400;
+    "></div>
+    ` : ""}
+
+    <div style="
+      font-size:${isTerminal ? "24px" : "18px"};
+      color:${isTerminal ? "#FFD400" : "white"};
+      font-weight:${isTerminal ? "bold" : "normal"};
+      text-align:center;
+    ">
+      ${isTerminal
+        ? station.toUpperCase()
+        : station}
+    </div>
+
+  </div>
+  `
+
+})
 
     document.getElementById("metroLine").innerHTML =
       html
