@@ -1874,11 +1874,32 @@ return `
 ">
 
 ${leftTrains.map(v => `
+const bgColor =
+  v.delay > 60
+    ? "#ff4d4d"
+    : v.delay > 15
+      ? "#ff9f1a"
+      : v.delay < 0
+        ? "#3ddc84"
+        : "#FFD400"
  <div
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
-    background:#FFD400;
-    color:black;
+    background:${
+  v.delay > 60
+    ? "#ff4d4d"
+    : v.delay > 15
+      ? "#ff9f1a"
+      : v.delay < 0
+        ? "#3ddc84"
+        : "#FFD400"
+};
+
+color:${
+  v.delay > 15 || v.delay < 0
+    ? "white"
+    : "black"
+};
     padding:3px 8px;
     border-radius:8px;
     font-weight:bold;
@@ -1899,11 +1920,32 @@ ${leftTrains.map(v => `
 ">
 
 ${rightTrains.map(v => `
+  const bgColor =
+  v.delay > 60
+    ? "#ff4d4d"
+    : v.delay > 15
+      ? "#ff9f1a"
+      : v.delay < 0
+        ? "#3ddc84"
+        : "#FFD400"
   <div
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
-    background:#FFD400;
-    color:black;
+   background:${
+  v.delay > 60
+    ? "#ff4d4d"
+    : v.delay > 15
+      ? "#ff9f1a"
+      : v.delay < 0
+        ? "#3ddc84"
+        : "#FFD400"
+};
+
+color:${
+  v.delay > 15 || v.delay < 0
+    ? "white"
+    : "black"
+};
     padding:3px 8px;
     border-radius:8px;
     font-weight:bold;
