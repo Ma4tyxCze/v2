@@ -1814,7 +1814,27 @@ async function openMetroPopup(){
   return obehA - obehB
 
 })
+const trainsAtStation = {}
 
+metroBStations.forEach(station=>{
+  trainsAtStation[station] = []
+})
+
+data.forEach((vlak,index)=>{
+
+  const stationIndex =
+    Math.floor(
+      index *
+      metroBStations.length /
+      data.length
+    )
+
+  const station =
+    metroBStations[stationIndex]
+
+  trainsAtStation[station].push(vlak)
+
+})
 metroBStations.forEach((station,index)=>{
 
   html += `
@@ -1827,24 +1847,26 @@ metroBStations.forEach((station,index)=>{
   ">
 
    ${
-  index === 0
-  ? `
-  <div style="
-    position:absolute;
-    left:0;
+  trainsAtStation[station]
+    .map(vlak => `
+      <div style="
+        position:absolute;
+        left:0;
 
-    background:#FFD400;
-    color:black;
+        background:#FFD400;
+        color:black;
 
-    padding:3px 8px;
-    border-radius:8px;
+        padding:3px 8px;
+        border-radius:8px;
 
-    font-weight:bold;
-  ">
-    B/${data[0].obeh}
-  </div>
-  `
-  : ""
+        font-weight:bold;
+
+        margin-top:4px;
+      ">
+        B/${vlak.obeh}
+      </div>
+    `)
+    .join("")
 }
 
     <div style="
