@@ -1803,23 +1803,7 @@ async function openMetroPopup(){
     )
 
     const data = await res.json()
-let debug = ""
 
-data.forEach(vlak => {
-
-  debug +=
-    "B/" +
-    vlak.obeh +
-    " → " +
-    nearestStation(
-      vlak.lat,
-      vlak.lon
-    ) +
-    "\n"
-
-})
-
-alert(debug)
     let html = ""
 
    data.sort((a,b) => {
