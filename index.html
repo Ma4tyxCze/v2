@@ -1846,27 +1846,66 @@ metroBStations.forEach((station,index)=>{
     position:relative;
   ">
 
-   ${
+  ${
+(() => {
+
+const leftTrains =
   trainsAtStation[station]
-    .map(vlak => `
-      <div style="
-        position:absolute;
-        left:0;
+    .filter(v => (v.bearing || 0) > 180)
 
-        background:#FFD400;
-        color:black;
+const rightTrains =
+  trainsAtStation[station]
+    .filter(v => (v.bearing || 0) <= 180)
 
-        padding:3px 8px;
-        border-radius:8px;
+return `
 
-        font-weight:bold;
+<div style="
+  position:absolute;
+  left:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+">
 
-        margin-top:4px;
-      ">
-        B/${vlak.obeh}
-      </div>
-    `)
-    .join("")
+${leftTrains.map(v => `
+  <div style="
+    background:#FFD400;
+    color:black;
+    padding:3px 8px;
+    border-radius:8px;
+    font-weight:bold;
+  ">
+    B/${v.obeh}
+  </div>
+`).join("")}
+
+</div>
+
+<div style="
+  position:absolute;
+  right:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+">
+
+${rightTrains.map(v => `
+  <div style="
+    background:#FFD400;
+    color:black;
+    padding:3px 8px;
+    border-radius:8px;
+    font-weight:bold;
+  ">
+    B/${v.obeh}
+  </div>
+`).join("")}
+
+</div>
+
+`
+
+})()
 }
 
     <div style="
