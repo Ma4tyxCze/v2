@@ -1803,17 +1803,23 @@ async function openMetroPopup(){
     )
 
     const data = await res.json()
-const prvniVlak = data[0]
+let debug = ""
 
-alert(
-  "B/" +
-  prvniVlak.obeh +
-  " → " +
-  nearestStation(
-    prvniVlak.lat,
-    prvniVlak.lon
-  )
-)
+data.forEach(vlak => {
+
+  debug +=
+    "B/" +
+    vlak.obeh +
+    " → " +
+    nearestStation(
+      vlak.lat,
+      vlak.lon
+    ) +
+    "\n"
+
+})
+
+alert(debug)
     let html = ""
 
     metroBStations.forEach((station,index) => {
