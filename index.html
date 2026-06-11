@@ -2030,7 +2030,17 @@ metroInterval = setInterval(() => {
         ? "Zličín"
         : "Černý Most"
   }
+    let stav = "Neznámý"
 
+if(vlak.state === "on_track"){
+  stav = "🚇 Na trati"
+}
+else if(vlak.state === "at_stop"){
+  stav = "🚉 Ve stanici"
+}
+else if(vlak.state === "before_track"){
+  stav = "🟡 Před výjezdem"
+}
   document.getElementById("trainInfo").innerHTML = `
     <b>Oběh:</b> ${vlak.obeh}<br><br>
 
@@ -2038,7 +2048,7 @@ metroInterval = setInterval(() => {
     ${vlak.delay ?? 0} s<br><br>
 
     <b>Stav:</b>
-    ${vlak.state}<br><br>
+    ${stav}<br><br>
 
     <b>Směr:</b>
     ${smer}
