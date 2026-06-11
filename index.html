@@ -483,7 +483,71 @@ cursor:pointer;
 
 z-index:25;
 }
+.metroBtn{
+position:absolute;
+right:100px;   /* mezi PDF a statistiky */
+top:230px;
 
+width:40px;
+height:40px;
+
+border-radius:50%;
+
+background:#FFD400;
+color:black;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:18px;
+
+box-shadow:0 0 6px rgba(0,0,0,0.5);
+cursor:pointer;
+
+z-index:25;
+}
+.metroPopup{
+position:fixed;
+inset:0;
+background:#111;
+
+display:none;
+
+z-index:99999;
+
+overflow-y:auto;
+}
+
+.metroContent{
+padding:20px;
+padding-top:70px;
+}
+
+.metroClose{
+position:fixed;
+
+top:20px;
+right:20px;
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+background:#FFD400;
+color:black;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-weight:bold;
+font-size:18px;
+
+cursor:pointer;
+}
+  
   .statsBtn{
 position:absolute;
 right:100px;   /* mezi WA a PDF */
@@ -650,11 +714,14 @@ Aplikace neobsahuje žádné reklamy, stahování souborů ani sběr osobních �
 <div class="contactBtn" onclick="openContactsPdf()">
   ☎️
 </div>
-
+<div class="metroBtn" onclick="openMetroPopup()">
+  🚇
+</div>
   <div class="pdfBtn" onclick="openCurrentPdf()">
     📄
   </div>
-<div class="statsBtn" onclick="openStatsPopup()">
+
+  <div class="statsBtn" onclick="openStatsPopup()">
   📊
 </div>
 </div>
@@ -743,6 +810,32 @@ let savedScrollY = 0
 const input=document.getElementById("shiftInput")
 const result=document.getElementById("result")
 const gvdSelect=document.getElementById("gvdSelect")
+  const metroBStations = [
+"Černý Most",
+"Rajská zahrada",
+"Hloubětín",
+"Kolbenova",
+"Vysočanská",
+"Českomoravská",
+"Palmovka",
+    "Invalidovna",
+  "Křižíkova",
+"Florenc",
+"Náměstí Republiky",
+"Můstek",
+"Národní třída",
+"Karlovo náměstí",
+"Anděl",
+"Smíchovské nádraží",
+"Radlická",
+"Jinonice",
+"Nové Butovice",
+"Hůrka",
+"Lužiny",
+"Luka",
+"Stodůlky",
+"Zličín"
+]
 // 🔥 označení čísla + posun do středu obrazovky (mobil)
 input.addEventListener("focus", function() {
   this.select()
@@ -1668,6 +1761,34 @@ function openContactsPdf(){
 
   showToast("Pro návrat přejeď prstem doleva")
 }
+
+  function openMetroPopup(){
+
+  let html = ""
+
+  metroBStations.forEach(station => {
+
+    html += `
+      <div style="
+        text-align:center;
+        color:white;
+        margin:16px 0;
+        font-size:18px;
+      ">
+        ${station}
+      </div>
+    `
+
+  })
+
+  document.getElementById("metroLine").innerHTML = html
+
+  document.getElementById("metroPopup").style.display = "block"
+}
+
+function closeMetroPopup(){
+  document.getElementById("metroPopup").style.display = "none"
+}
 </script>
  <div id="statsPopup" class="contactPopup">
 
@@ -1746,6 +1867,21 @@ Spustit proužek
   <iframe id="pdfFrame"></iframe>
 
 </div>
+<div id="metroPopup" class="metroPopup">
 
+  <div class="metroClose"
+       onclick="closeMetroPopup()">
+    ✖
+  </div>
+
+  <div class="metroContent">
+
+    <h2>🚇 Metro B Live</h2>
+
+    <div id="metroLine"></div>
+
+  </div>
+
+</div>
 </body>
 </html>
