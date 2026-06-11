@@ -1846,7 +1846,7 @@ metroBStations.forEach((station,index)=>{
     display:flex;
     align-items:center;
     justify-content:center;
-    min-height:42px;
+    min-height:58px;
     position:relative;
   ">
 
@@ -1865,19 +1865,22 @@ return `
 
 <div style="
   position:absolute;
-  left:0;
+  left:-35px;
   display:flex;
   flex-direction:column;
   gap:3px;
 ">
 
 ${leftTrains.map(v => `
-  <div style="
+ <div
+  onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+  style="
     background:#FFD400;
     color:black;
     padding:3px 8px;
     border-radius:8px;
     font-weight:bold;
+    cursor:pointer;
   ">
     B/${v.obeh}
   </div>
@@ -1887,19 +1890,22 @@ ${leftTrains.map(v => `
 
 <div style="
   position:absolute;
-  right:0;
+  right:-35px;
   display:flex;
   flex-direction:column;
   gap:3px;
 ">
 
 ${rightTrains.map(v => `
-  <div style="
+  <div
+  onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+  style="
     background:#FFD400;
     color:black;
     padding:3px 8px;
     border-radius:8px;
     font-weight:bold;
+    cursor:pointer;
   ">
     B/${v.obeh}
   </div>
@@ -1987,6 +1993,40 @@ metroInterval = setInterval(() => {
   metroInterval = null
 }
 }
+  function showTrainInfo(vlak){
+
+  let smer = "Neznámý"
+
+  if(vlak.bearing != null){
+    smer =
+      vlak.bearing > 180
+        ? "Zličín"
+        : "Černý Most"
+  }
+
+  document.getElementById("trainInfo").innerHTML = `
+    <b>Oběh:</b> ${vlak.obeh}<br><br>
+
+    <b>Zpoždění:</b>
+    ${vlak.delay ?? 0} s<br><br>
+
+    <b>Stav:</b>
+    ${vlak.state}<br><br>
+
+    <b>Směr:</b>
+    ${smer}
+  `
+
+  document.getElementById("trainPopup")
+    .style.display = "flex"
+}
+
+function closeTrainPopup(){
+
+  document.getElementById("trainPopup")
+    .style.display = "none"
+
+}
 </script>
  <div id="statsPopup" class="contactPopup">
 
@@ -2065,7 +2105,24 @@ Spustit proužek
   <iframe id="pdfFrame"></iframe>
 
 </div>
-<div id="metroPopup" class="metroPopup">
+<div id="trainPopup" class="contactPopup">
+
+  <div class="contactBox">
+
+    <h3>Detail oběhu</h3>
+
+    <div id="trainInfo">
+      Načítám...
+    </div>
+
+    <button onclick="closeTrainPopup()">
+      Zavřít
+    </button>
+
+  </div>
+
+</div>
+  <div id="metroPopup" class="metroPopup">
 
   <div class="metroClose"
        onclick="closeMetroPopup()">
