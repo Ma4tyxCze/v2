@@ -515,7 +515,7 @@ background:#111;
 display:none;
 
 z-index:99999;
-
+-webkit-overflow-scrolling:touch;
 overflow-y:auto;
 }
 
@@ -527,7 +527,7 @@ padding-top:70px;
 .metroClose{
 position:fixed;
 
-top:20px;
+top:55px;
 right:20px;
 
 width:42px;
@@ -1762,20 +1762,27 @@ function openContactsPdf(){
   showToast("Pro návrat přejeď prstem doleva")
 }
 
-  function openMetroPopup(){
+function openMetroPopup(){
 
   let html = ""
 
   metroBStations.forEach(station => {
 
+    const isTerminal =
+      station === "Černý Most" ||
+      station === "Zličín"
+
     html += `
       <div style="
         text-align:center;
-        color:white;
         margin:16px 0;
-        font-size:18px;
+        font-size:${isTerminal ? "24px" : "18px"};
+        color:${isTerminal ? "#FFD400" : "white"};
+        font-weight:${isTerminal ? "bold" : "normal"};
       ">
-        ${station}
+        ${isTerminal
+          ? station.toUpperCase()
+          : station}
       </div>
     `
 
@@ -1785,7 +1792,6 @@ function openContactsPdf(){
 
   document.getElementById("metroPopup").style.display = "block"
 }
-
 function closeMetroPopup(){
   document.getElementById("metroPopup").style.display = "none"
 }
