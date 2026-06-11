@@ -1800,27 +1800,47 @@ function openMetroPopup(){
       : station}
  
   </div>
- ${station === "Anděl" ? `
+${station === "Anděl" ? `
 <div style="
   position:absolute;
-  left:-70px;
+  left:-60px;
   top:50%;
   transform:translateY(-50%);
-  font-size:24px;
+
+  background:#FFD400;
+  color:black;
+
+  padding:3px 8px;
+  border-radius:8px;
+
+  font-size:12px;
+  font-weight:bold;
+
+  white-space:nowrap;
 ">
-🚇
+B/28
 </div>
 ` : ""}
 
 ${station === "Florenc" ? `
 <div style="
   position:absolute;
-  right:-70px;
+  right:-60px;
   top:50%;
   transform:translateY(-50%);
-  font-size:24px;
+
+  background:#FFD400;
+  color:black;
+
+  padding:3px 8px;
+  border-radius:8px;
+
+  font-size:12px;
+  font-weight:bold;
+
+  white-space:nowrap;
 ">
-🚇
+B/15
 </div>
 ` : ""}
 </div>
