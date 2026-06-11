@@ -1815,47 +1815,61 @@ async function openMetroPopup(){
 
 })
 
-data.forEach(vlak => {
-
-  const delay =
-    vlak.delay > 0
-      ? "+" + vlak.delay + "s"
-      : vlak.delay + "s"
+metroBStations.forEach((station,index)=>{
 
   html += `
   <div style="
     display:flex;
+    align-items:center;
     justify-content:center;
-    gap:12px;
-
-    margin:8px 0;
-
-    color:white;
-    font-size:18px;
+    min-height:42px;
+    position:relative;
   ">
 
+    ${
+      index === 0
+      ? `
+      <div style="
+        position:absolute;
+        left:0;
+
+        background:#FFD400;
+        color:black;
+
+        padding:3px 8px;
+        border-radius:8px;
+
+        font-weight:bold;
+      ">
+        B/25
+      </div>
+      `
+      : ""
+    }
+
     <div style="
-      background:#FFD400;
-      color:black;
-
-      padding:3px 8px;
-      border-radius:8px;
-
+      color:${station==="Černý Most" || station==="Zličín" ? "#FFD400" : "#fff"};
       font-weight:bold;
-      min-width:50px;
     ">
-      B/${vlak.obeh}
-    </div>
-
-    <div>
-      ${delay}
+      ${station}
     </div>
 
   </div>
   `
 
-})
+  if(index < metroBStations.length-1){
 
+    html += `
+    <div style="
+      height:26px;
+      border-left:4px solid #FFD400;
+      width:0;
+      margin:auto;
+    "></div>
+    `
+  }
+
+})
     document.getElementById("metroLine").innerHTML =
       html
 
