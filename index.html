@@ -2020,7 +2020,7 @@ metroInterval = setInterval(() => {
   metroInterval = null
 }
 }
-  function showTrainInfo(vlak){
+ async function showTrainInfo(vlak){
 
   let smer = "Neznámý"
 
@@ -2030,32 +2030,110 @@ metroInterval = setInterval(() => {
         ? "Zličín"
         : "Černý Most"
   }
-    let stav = "Neznámý"
 
-if(vlak.state === "on_track"){
-  stav = "🚇 Na trati"
-}
-else if(vlak.state === "at_stop"){
-  stav = "🚉 Ve stanici"
-}
-else if(vlak.state === "before_track"){
-  stav = "🟡 Před výjezdem"
-}
-  document.getElementById("trainInfo").innerHTML = `
-    <b>Oběh:</b> ${vlak.obeh}<br><br>
+  let stav = "Neznámý"
 
-    <b>Zpoždění:</b>
-    ${vlak.delay ?? 0} s<br><br>
-
-    <b>Stav:</b>
-    ${stav}<br><br>
-
-    <b>Směr:</b>
-    ${smer}
-  `
+  if(vlak.state === "on_track"){
+    stav = "🚇 Na trati"
+  }
+  else if(vlak.state === "at_stop"){
+    stav = "🚉 Ve stanici"
+  }
+  else if(vlak.state === "before_track"){
+    stav = "🟡 Před výjezdem"
+  }
 
   document.getElementById("trainPopup")
     .style.display = "flex"
+
+  document.getElementById("trainInfo").innerHTML = `
+    Načítám jízdní řád...
+  `
+
+  try{
+
+    const response = await fetch(
+      API_URL +
+      "/api/metro-detail?tripId=" +
+      encodeURIComponent(vlak.tripId)
+    )
+
+    const detail =
+      await response.json()
+
+    const stops =
+      detail.stop_times?.features || []
+
+    let stopsHtml = ""
+
+    stops.forEach(stop => {
+
+      const p = stop.properties
+
+      stopsHtml += `
+        <div style="
+          padding:6px 0;
+          border-bottom:1px solid #333;
+        ">
+          <b>${p.arrival_time?.substring(0,5)}</b>
+          ${p.stop_name}
+        </div>
+      `
+
+    })
+
+    document.getElementById("trainInfo").innerHTML = `
+
+      <div style="
+        font-size:18px;
+        font-weight:bold;
+        margin-bottom:10px;
+      ">
+        🚇 Oběh ${vlak.obeh}
+      </div>
+
+      <b>Směr:</b>
+      ${detail.trip_headsign || smer}
+
+      <br><br>
+
+      <b>Stav:</b>
+      ${stav}
+
+      <br><br>
+
+      <b>Zpoždění:</b>
+      ${vlak.delay ?? 0} s
+
+      <br><br>
+
+      <div style="
+        border-top:1px solid #444;
+        padding-top:10px;
+        margin-top:10px;
+        font-weight:bold;
+      ">
+        Jízdní řád
+      </div>
+
+      <div style="
+        max-height:250px;
+        overflow-y:auto;
+        margin-top:8px;
+      ">
+        ${stopsHtml}
+      </div>
+
+    `
+
+  }catch(e){
+
+    document.getElementById("trainInfo").innerHTML = `
+      Chyba načítání jízdního řádu
+    `
+
+  }
+
 }
 
 function closeTrainPopup(){
