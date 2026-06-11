@@ -1763,93 +1763,48 @@ function openContactsPdf(){
   showToast("Pro návrat přejeď prstem doleva")
 }
 
-function openMetroPopup(){
-
-  let html = ""
-
-  metroBStations.forEach((station,index) => {
-
-  const isTerminal =
-    station === "Černý Most" ||
-    station === "Zličín"
-
-  html += `
-<div style="
-  display:flex;
-  position:relative;
-  flex-direction:column;
-  align-items:center;
-">
-
-  ${index > 0 ? `
-  <div style="
-    width:4px;
-    height:40px;
-    background:#FFD400;
-  "></div>
-  ` : ""}
-
-  <div style="
-    font-size:${isTerminal ? "24px" : "18px"};
-    color:${isTerminal ? "#FFD400" : "white"};
-    font-weight:${isTerminal ? "bold" : "normal"};
-    text-align:center;
-  ">
-    ${isTerminal
-      ? station.toUpperCase()
-      : station}
- 
-  </div>
-${station === "Anděl" ? `
-<div style="
-  position:absolute;
-  left:-60px;
-  top:50%;
-  transform:translateY(-50%);
-
-  background:#FFD400;
-  color:black;
-
-  padding:3px 8px;
-  border-radius:8px;
-
-  font-size:12px;
-  font-weight:bold;
-
-  white-space:nowrap;
-">
-B/28
-</div>
-` : ""}
-
-${station === "Florenc" ? `
-<div style="
-  position:absolute;
-  right:-60px;
-  top:50%;
-  transform:translateY(-50%);
-
-  background:#FFD400;
-  color:black;
-
-  padding:3px 8px;
-  border-radius:8px;
-
-  font-size:12px;
-  font-weight:bold;
-
-  white-space:nowrap;
-">
-B/15
-</div>
-` : ""}
-</div>
-`
-})
-
-  document.getElementById("metroLine").innerHTML = html
+async function openMetroPopup(){
 
   document.getElementById("metroPopup").style.display = "block"
+
+  document.getElementById("metroLine").innerHTML =
+    "Načítám Metro B..."
+
+  try{
+
+    const res = await fetch(
+      "https://prohozy-api.marty-protiva.workers.dev/api/metrob-live"
+    )
+
+    const data = await res.json()
+
+    let html = ""
+
+    data.forEach(vlak => {
+
+      html += `
+      <div style="
+        color:#FFD400;
+        text-align:center;
+        margin:10px 0;
+        font-weight:bold;
+      ">
+        B/${vlak.obeh}
+      </div>
+      `
+
+    })
+
+    document.getElementById("metroLine").innerHTML =
+      html
+
+  }catch(e){
+
+    document.getElementById("metroLine").innerHTML =
+      "Chyba načítání"
+
+  }
+
 }
 function closeMetroPopup(){
   document.getElementById("metroPopup").style.display = "none"
