@@ -1797,7 +1797,9 @@ function openMetroPopup(){
     ${isTerminal
       ? station.toUpperCase()
       : station}
-  ${station === "Anděl" ? `
+ 
+  </div>
+ ${station === "Anděl" ? `
 <div style="
   position:absolute;
   left:-70px;
@@ -1820,8 +1822,6 @@ ${station === "Florenc" ? `
 🚇
 </div>
 ` : ""}
-  </div>
-
 </div>
 `
 })
