@@ -1820,19 +1820,20 @@ metroBStations.forEach(station=>{
   trainsAtStation[station] = []
 })
 
-data.forEach((vlak,index)=>{
-
-  const stationIndex =
-    Math.floor(
-      index *
-      metroBStations.length /
-      data.length
-    )
+data.forEach(vlak => {
 
   const station =
-    metroBStations[stationIndex]
+    nearestStation(
+      vlak.lat,
+      vlak.lon
+    )
 
-  trainsAtStation[station].push(vlak)
+  if(station){
+
+    trainsAtStation[station]
+      .push(vlak)
+
+  }
 
 })
 metroBStations.forEach((station,index)=>{
@@ -1943,6 +1944,32 @@ ${rightTrains.map(v => `
 
 }
 
+  function nearestStation(lat, lon){
+
+  let bestStation = null
+  let bestDistance = Infinity
+
+  for(const station in metroCoords){
+
+    const stationLat = metroCoords[station][0]
+    const stationLon = metroCoords[station][1]
+
+    const distance =
+      Math.abs(lat - stationLat) +
+      Math.abs(lon - stationLon)
+
+    if(distance < bestDistance){
+
+      bestDistance = distance
+      bestStation = station
+
+    }
+
+  }
+
+  return bestStation
+
+}
   
   function closeMetroPopup(){
   document.getElementById("metroPopup").style.display = "none"
