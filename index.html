@@ -1826,26 +1826,26 @@ metroBStations.forEach((station,index)=>{
     position:relative;
   ">
 
-    ${
-      index === 0
-      ? `
-      <div style="
-        position:absolute;
-        left:0;
+   ${
+  index === 0
+  ? `
+  <div style="
+    position:absolute;
+    left:0;
 
-        background:#FFD400;
-        color:black;
+    background:#FFD400;
+    color:black;
 
-        padding:3px 8px;
-        border-radius:8px;
+    padding:3px 8px;
+    border-radius:8px;
 
-        font-weight:bold;
-      ">
-        B/25
-      </div>
-      `
-      : ""
-    }
+    font-weight:bold;
+  ">
+    B/${data[0].obeh}
+  </div>
+  `
+  : ""
+}
 
     <div style="
       color:${station==="Černý Most" || station==="Zličín" ? "#FFD400" : "#fff"};
