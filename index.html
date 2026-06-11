@@ -1773,18 +1773,31 @@ function openMetroPopup(){
       station === "Zličín"
 
     html += `
-      <div style="
-        text-align:center;
-        margin:16px 0;
-        font-size:${isTerminal ? "24px" : "18px"};
-        color:${isTerminal ? "#FFD400" : "white"};
-        font-weight:${isTerminal ? "bold" : "normal"};
-      ">
-        ${isTerminal
-          ? station.toUpperCase()
-          : station}
-      </div>
-    `
+<div style="
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+">
+
+  <div style="
+    width:4px;
+    height:32px;
+    background:#FFD400;
+  "></div>
+
+  <div style="
+    font-size:${isTerminal ? "24px" : "18px"};
+    color:${isTerminal ? "#FFD400" : "white"};
+    font-weight:${isTerminal ? "bold" : "normal"};
+    text-align:center;
+  ">
+    ${isTerminal
+      ? station.toUpperCase()
+      : station}
+  </div>
+
+</div>
+`
 
   })
 
