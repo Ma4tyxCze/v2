@@ -1898,6 +1898,31 @@ if(
 }
 
 })
+    function getSegmentPosition(v, s1, s2){
+
+  const lat1 = metroCoords[s1][0]
+  const lon1 = metroCoords[s1][1]
+
+  const lat2 = metroCoords[s2][0]
+  const lon2 = metroCoords[s2][1]
+
+  const total =
+    Math.abs(lat2 - lat1) +
+    Math.abs(lon2 - lon1)
+
+  const current =
+    Math.abs(v.lat - lat1) +
+    Math.abs(v.lon - lon1)
+
+  let ratio = current / total
+
+  ratio = Math.max(
+    0,
+    Math.min(1, ratio)
+  )
+
+  return ratio
+}
 metroBStations.forEach((station,index)=>{
 
   html += `
@@ -2032,11 +2057,11 @@ const rightSegmentTrains =
   html += `
   <div style="
     position:relative;
-    height:50px;
+    height:70px;
   ">
 
     <div style="
-      height:50px;
+      height:70px;
       border-left:4px solid #FFD400;
       width:0;
       margin:auto;
@@ -2048,18 +2073,33 @@ const rightSegmentTrains =
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
     position:absolute;
-    left:calc(50% - 55px);
+   left:calc(50% - 75px);
 
-    top:${5 + i*16}px;
+  top:${
+  getSegmentPosition(
+    v,
+    station,
+    metroBStations[index+1]
+  ) * 60
+}px;
 
-    background:#FFD400;
-    color:black;
+   background:${
+  v.delay >= 60
+    ? "#ff4d4d"
+    : v.delay >= 30
+      ? "#ff9f1a"
+      : "#3ddc84"
+};
 
-    padding:2px 7px;
-    border-radius:8px;
+color:${
+  v.delay > 15 || v.delay < 0
+    ? "white"
+    : "black"
+};
 
-    font-size:12px;
-    font-weight:bold;
+padding:5px 10px;
+
+font-size:16px;
 
     cursor:pointer;
   ">
@@ -2076,16 +2116,30 @@ ${rightSegmentTrains.map((v,i)=>`
     position:absolute;
     left:calc(50% + 20px);
 
-    top:${5 + i*16}px;
+   top:${
+  getSegmentPosition(
+    v,
+    station,
+    metroBStations[index+1]
+  ) * 60
+}px;
+  background:${
+  v.delay >= 60
+    ? "#ff4d4d"
+    : v.delay >= 30
+      ? "#ff9f1a"
+      : "#3ddc84"
+};
 
-    background:#FFD400;
-    color:black;
+color:${
+  v.delay > 15 || v.delay < 0
+    ? "white"
+    : "black"
+};
 
-    padding:2px 7px;
-    border-radius:8px;
+padding:5px 10px;
 
-    font-size:12px;
-    font-weight:bold;
+font-size:16px;
 
     cursor:pointer;
   ">
