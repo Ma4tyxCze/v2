@@ -2002,17 +2002,57 @@ ${rightTrains.map(v => `
   </div>
   `
 
-  if(index < metroBStations.length-1){
+if(index < metroBStations.length-1){
 
-    html += `
+  const segmentKey =
+    station + "|" +
+    metroBStations[index + 1]
+
+  const segmentTrains =
+    trainsBetweenStations[segmentKey] || []
+
+  html += `
+  <div style="
+    position:relative;
+    height:50px;
+  ">
+
     <div style="
-      height:26px;
+      height:50px;
       border-left:4px solid #FFD400;
       width:0;
       margin:auto;
     "></div>
-    `
-  }
+
+    ${segmentTrains.map((v,i)=>`
+
+      <div
+      onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+      style="
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        top:${5 + i*16}px;
+
+        background:#FFD400;
+        color:black;
+
+        padding:2px 7px;
+        border-radius:8px;
+
+        font-size:12px;
+        font-weight:bold;
+
+        cursor:pointer;
+      ">
+        B/${v.obeh}
+      </div>
+
+    `).join("")}
+
+  </div>
+  `
+}
 
 })
     document.getElementById("metroLine").innerHTML =
