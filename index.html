@@ -1859,12 +1859,12 @@ let bestDistance = Infinity
       vlak.lon
     )
 
-  if(station){
+  if(vlak.state === "at_stop" && station){
 
-    trainsAtStation[station]
-      .push(vlak)
+  trainsAtStation[station]
+    .push(vlak)
 
-  }
+}
 for(let i=0;i<metroBStations.length-1;i++){
 
   const s1 = metroBStations[i]
