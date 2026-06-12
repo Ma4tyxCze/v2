@@ -1820,13 +1820,28 @@ async function openMetroPopup(isRefresh = false){
 
 })
 const trainsAtStation = {}
+const trainsBetweenStations = {}
 
+metroBStations.forEach((station,index)=>{
+
+  if(index < metroBStations.length - 1){
+
+    const key =
+      station + "|" +
+      metroBStations[index + 1]
+
+    trainsBetweenStations[key] = []
+
+  }
+
+})
 metroBStations.forEach(station=>{
   trainsAtStation[station] = []
 })
 
 data.forEach(vlak => {
-
+let bestSegment = null
+let bestDistance = Infinity
   const station =
     nearestStation(
       vlak.lat,
@@ -1839,7 +1854,39 @@ data.forEach(vlak => {
       .push(vlak)
 
   }
+for(let i=0;i<metroBStations.length-1;i++){
 
+  const s1 = metroBStations[i]
+  const s2 = metroBStations[i+1]
+
+  const lat1 = metroCoords[s1][0]
+  const lon1 = metroCoords[s1][1]
+
+  const lat2 = metroCoords[s2][0]
+  const lon2 = metroCoords[s2][1]
+
+  const midLat = (lat1 + lat2) / 2
+  const midLon = (lon1 + lon2) / 2
+
+  const distance =
+    Math.abs(vlak.lat - midLat) +
+    Math.abs(vlak.lon - midLon)
+
+  if(distance < bestDistance){
+
+    bestDistance = distance
+    bestSegment = s1 + "|" + s2
+
+  }
+
+}
+
+if(bestSegment){
+
+  trainsBetweenStations[bestSegment]
+    .push(vlak)
+
+}
 })
 metroBStations.forEach((station,index)=>{
 
@@ -2102,8 +2149,18 @@ let stopsHtml = ""
           padding:6px 0;
           border-bottom:1px solid #333;
         ">
-          <b>${p.arrival_time?.substring(0,5)}</b>
-          ${p.stop_name}
+          <b style="
+  color:${isCurrent ? "#FFD400" : "#fff"};
+">
+  ${p.arrival_time?.substring(0,5)}
+</b>
+
+<span style="
+  color:${isCurrent ? "#FFD400" : "#fff"};
+  font-weight:${isCurrent ? "bold" : "normal"};
+">
+  ${p.stop_name}
+</span>
         </div>
       `
 
