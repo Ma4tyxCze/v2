@@ -2140,31 +2140,34 @@ let stopsHtml = ""
   stops[startIndex]?.properties?.stop_name
   || "Neznámá"
     
-    stops.slice(startIndex).forEach(stop => {
+stops.slice(startIndex).forEach(stop => {
 
-      const p = stop.properties
+  const p = stop.properties
 
-      stopsHtml += `
-        <div style="
-          padding:6px 0;
-          border-bottom:1px solid #333;
-        ">
-          <b style="
-  color:${isCurrent ? "#FFD400" : "#fff"};
-">
-  ${p.arrival_time?.substring(0,5)}
-</b>
+  const isCurrent =
+    p.stop_name === currentStop
 
-<span style="
-  color:${isCurrent ? "#FFD400" : "#fff"};
-  font-weight:${isCurrent ? "bold" : "normal"};
-">
-  ${p.stop_name}
-</span>
-        </div>
-      `
+  stopsHtml += `
+    <div style="
+      padding:6px 0;
+      border-bottom:1px solid #333;
+    ">
+      <b style="
+        color:${isCurrent ? "#FFD400" : "#fff"};
+      ">
+        ${p.arrival_time?.substring(0,5)}
+      </b>
 
-    })
+      <span style="
+        color:${isCurrent ? "#FFD400" : "#fff"};
+        font-weight:${isCurrent ? "bold" : "normal"};
+      ">
+        ${p.stop_name}
+      </span>
+    </div>
+  `
+
+})
 
     document.getElementById("trainInfo").innerHTML = `
 
