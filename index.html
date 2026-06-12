@@ -1819,58 +1819,23 @@ async function openMetroPopup(isRefresh = false){
   return obehA - obehB
 
 })
-const trainsOnSegment = {}
+const trainsAtStation = {}
 
-for(let i=0;i<metroBStations.length-1;i++){
-
-  const key =
-    metroBStations[i] +
-    "|" +
-    metroBStations[i+1]
-
-  trainsOnSegment[key] = []
-
-}
+metroBStations.forEach(station=>{
+  trainsAtStation[station] = []
+})
 
 data.forEach(vlak => {
 
-  let bestSegment = null
-  let bestDistance = Infinity
+  const station =
+    nearestStation(
+      vlak.lat,
+      vlak.lon
+    )
 
-  for(let i=0;i<metroBStations.length-1;i++){
+  if(station){
 
-    const s1 = metroBStations[i]
-    const s2 = metroBStations[i+1]
-
-    const lat1 = metroCoords[s1][0]
-    const lon1 = metroCoords[s1][1]
-
-    const lat2 = metroCoords[s2][0]
-    const lon2 = metroCoords[s2][1]
-
-    const midLat =
-      (lat1 + lat2) / 2
-
-    const midLon =
-      (lon1 + lon2) / 2
-
-    const distance =
-      Math.abs(vlak.lat - midLat) +
-      Math.abs(vlak.lon - midLon)
-
-    if(distance < bestDistance){
-
-      bestDistance = distance
-      bestSegment =
-        s1 + "|" + s2
-
-    }
-
-  }
-
-  if(bestSegment){
-
-    trainsOnSegment[bestSegment]
+    trainsAtStation[station]
       .push(vlak)
 
   }
