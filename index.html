@@ -2089,6 +2089,10 @@ stops.forEach((stop,index)=>{
 
 let stopsHtml = ""
 
+    const currentStop =
+  stops[startIndex]?.properties?.stop_name
+  || "Neznámá"
+    
     stops.slice(startIndex).forEach(stop => {
 
       const p = stop.properties
@@ -2107,13 +2111,23 @@ let stopsHtml = ""
 
     document.getElementById("trainInfo").innerHTML = `
 
-      <div style="
-        font-size:18px;
-        font-weight:bold;
-        margin-bottom:10px;
-      ">
-        🚇 Oběh ${vlak.obeh}
-      </div>
+     <div style="
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:10px;
+">
+  🚇 Oběh ${vlak.obeh}
+</div>
+
+<div style="
+  background:#222;
+  border:1px solid #444;
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:12px;
+">
+  📍 <b>${currentStop}</b>
+</div>
 
       <b>Směr:</b>
       ${detail.trip_headsign || smer}
