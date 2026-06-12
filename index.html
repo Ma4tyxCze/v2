@@ -1808,7 +1808,18 @@ async function openMetroPopup(isRefresh = false){
     )
 
     const data = await res.json()
-console.log(data)
+data.forEach(v => {
+
+  console.log(
+    "Obeh:",
+    v.obeh,
+    "State:",
+    v.state,
+    "Bearing:",
+    v.bearing
+  )
+
+})
     let html = ""
 
    data.sort((a,b) => {
