@@ -2020,7 +2020,15 @@ if(index < metroBStations.length-1){
 
   const segmentTrains =
     trainsBetweenStations[segmentKey] || []
+const leftSegmentTrains =
+  segmentTrains.filter(v =>
+    (v.bearing || 0) >= 180
+  )
 
+const rightSegmentTrains =
+  segmentTrains.filter(v =>
+    (v.bearing || 0) < 180
+  )
   html += `
   <div style="
     position:relative;
@@ -2034,31 +2042,57 @@ if(index < metroBStations.length-1){
       margin:auto;
     "></div>
 
-    ${segmentTrains.map((v,i)=>`
+   ${leftSegmentTrains.map((v,i)=>`
 
-      <div
-      onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
-      style="
-        position:absolute;
-        left:50%;
-        transform:translateX(-50%);
-        top:${5 + i*16}px;
+  <div
+  onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+  style="
+    position:absolute;
+    left:calc(50% - 55px);
 
-        background:#FFD400;
-        color:black;
+    top:${5 + i*16}px;
 
-        padding:2px 7px;
-        border-radius:8px;
+    background:#FFD400;
+    color:black;
 
-        font-size:12px;
-        font-weight:bold;
+    padding:2px 7px;
+    border-radius:8px;
 
-        cursor:pointer;
-      ">
-        B/${v.obeh}
-      </div>
+    font-size:12px;
+    font-weight:bold;
 
-    `).join("")}
+    cursor:pointer;
+  ">
+    B/${v.obeh}
+  </div>
+
+`).join("")}
+
+${rightSegmentTrains.map((v,i)=>`
+
+  <div
+  onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+  style="
+    position:absolute;
+    left:calc(50% + 20px);
+
+    top:${5 + i*16}px;
+
+    background:#FFD400;
+    color:black;
+
+    padding:2px 7px;
+    border-radius:8px;
+
+    font-size:12px;
+    font-weight:bold;
+
+    cursor:pointer;
+  ">
+    B/${v.obeh}
+  </div>
+
+`).join("")}
 
   </div>
   `
