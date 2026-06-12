@@ -1821,7 +1821,8 @@ async function openMetroPopup(isRefresh = false){
 })
 const trainsAtStation = {}
 const trainsBetweenStations = {}
-
+const beforeTrackCernyMost = []
+const beforeTrackZlicin = []
 metroBStations.forEach((station,index)=>{
 
   if(index < metroBStations.length - 1){
@@ -1860,7 +1861,15 @@ if(vlak.state === "on_track"){
   trainsOnTrack.push(vlak)
 
 }
-  
+  if(vlak.state === "before_track"){
+
+  if(vlak.lon > 14.45){
+    beforeTrackCernyMost.push(vlak)
+  }else{
+    beforeTrackZlicin.push(vlak)
+  }
+
+}
 for(let i=0;i<metroBStations.length-1;i++){
 
   const s1 = metroBStations[i]
@@ -1924,7 +1933,34 @@ if(
   return ratio
 }
 metroBStations.forEach((station,index)=>{
+if(index === 0){
 
+  html += `
+    <div style="
+      display:flex;
+      justify-content:flex-end;
+      gap:4px;
+      margin-bottom:10px;
+    ">
+      ${beforeTrackCernyMost.map(v => `
+        <div
+          onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+          style="
+            background:#888;
+            color:white;
+            padding:5px 10px;
+            border-radius:8px;
+            font-weight:bold;
+            font-size:16px;
+            cursor:pointer;
+            
+          ">
+          B/${v.obeh}
+        </div>
+      `).join("")}
+    </div>
+  `
+}
   html += `
   <div style="
     display:flex;
@@ -1973,11 +2009,12 @@ ${leftTrains.map(v => `
         : "black"
     };
 
-    padding:5px 10px;
-    border-radius:8px;
-    font-weight:bold;
-    font-size:16px;
-    cursor:pointer;
+   padding:5px 10px;
+border-radius:8px;
+font-weight:bold;
+font-size:16px;
+
+cursor:pointer;
   ">
     B/${v.obeh}
   </div>
@@ -2010,11 +2047,12 @@ ${rightTrains.map(v => `
         : "black"
     };
 
-    padding:5px 10px;
-    border-radius:8px;
-    font-weight:bold;
-    font-size:16px;
-    cursor:pointer;
+  padding:5px 10px;
+border-radius:8px;
+font-weight:bold;
+font-size:16px;
+
+cursor:pointer;
   ">
     B/${v.obeh}
   </div>
@@ -2073,7 +2111,7 @@ const rightSegmentTrains =
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
     position:absolute;
-   left:calc(50% - 75px);
+  left:calc(50% - 70px);
 
   top:${
   getSegmentPosition(
@@ -2098,7 +2136,8 @@ color:${
 };
 
 padding:5px 10px;
-
+border-radius:8px;
+font-weight:bold;
 font-size:16px;
 
     cursor:pointer;
@@ -2114,7 +2153,7 @@ ${rightSegmentTrains.map((v,i)=>`
   onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
   style="
     position:absolute;
-    left:calc(50% + 20px);
+   left:calc(50% + 15px);
 
    top:${
   getSegmentPosition(
@@ -2138,7 +2177,8 @@ color:${
 };
 
 padding:5px 10px;
-
+border-radius:8px;
+font-weight:bold;
 font-size:16px;
 
     cursor:pointer;
@@ -2151,7 +2191,33 @@ font-size:16px;
   </div>
   `
 }
+if(index === metroBStations.length - 1){
 
+  html += `
+    <div style="
+      display:flex;
+      justify-content:flex-start;
+      gap:4px;
+      margin-top:10px;
+    ">
+      ${beforeTrackZlicin.map(v => `
+        <div
+          onclick='showTrainInfo(${JSON.stringify(v).replace(/'/g,"&apos;")})'
+          style="
+            background:#888;
+            color:white;
+            padding:5px 10px;
+            border-radius:8px;
+            font-weight:bold;
+            font-size:16px;
+            cursor:pointer;
+          ">
+            B/${v.obeh}
+        </div>
+      `).join("")}
+    </div>
+  `
+}
 })
     document.getElementById("metroLine").innerHTML =
       html
