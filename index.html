@@ -1808,18 +1808,7 @@ async function openMetroPopup(isRefresh = false){
     )
 
     const data = await res.json()
-data.forEach(v => {
 
-  console.log(
-    "Obeh:",
-    v.obeh,
-    "State:",
-    v.state,
-    "Bearing:",
-    v.bearing
-  )
-
-})
     let html = ""
 
    data.sort((a,b) => {
@@ -1846,6 +1835,7 @@ metroBStations.forEach((station,index)=>{
   }
 
 })
+    const trainsOnTrack = []
 metroBStations.forEach(station=>{
   trainsAtStation[station] = []
 })
@@ -1858,13 +1848,19 @@ let bestDistance = Infinity
       vlak.lat,
       vlak.lon
     )
-
-  if(vlak.state === "at_stop" && station){
+if(vlak.state === "at_stop" && station){
 
   trainsAtStation[station]
     .push(vlak)
 
 }
+
+if(vlak.state === "on_track"){
+
+  trainsOnTrack.push(vlak)
+
+}
+  
 for(let i=0;i<metroBStations.length-1;i++){
 
   const s1 = metroBStations[i]
@@ -1891,13 +1887,16 @@ for(let i=0;i<metroBStations.length-1;i++){
   }
 
 }
-
-if(bestSegment){
+if(
+  vlak.state === "on_track" &&
+  bestSegment
+){
 
   trainsBetweenStations[bestSegment]
     .push(vlak)
 
 }
+
 })
 metroBStations.forEach((station,index)=>{
 
