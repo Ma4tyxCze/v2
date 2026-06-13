@@ -2085,12 +2085,11 @@ if(index < metroBStations.length-1){
     trainsBetweenStations[segmentKey] || []
 const leftSegmentTrains =
   segmentTrains.filter(v =>
-    v.direction === "Zličín"
+    (v.bearing || 0) >= 180
   )
-
 const rightSegmentTrains =
   segmentTrains.filter(v =>
-    v.direction === "Černý Most"
+    (v.bearing || 0) < 180
   )
   html += `
   <div style="
@@ -2303,7 +2302,14 @@ metroInterval = setInterval(() => {
 
     const detail =
       await response.json()
-vlak.direction =
+
+    window.metroDirections =
+  window.metroDirections || {}
+
+window.metroDirections[vlak.tripId] =
+  detail.trip_headsign || ""
+    
+    vlak.direction =
   detail.trip_headsign || ""
     const stops =
   detail.stop_times?.features || []
