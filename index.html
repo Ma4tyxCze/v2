@@ -2272,14 +2272,8 @@ metroInterval = setInterval(() => {
 }
  async function showTrainInfo(vlak){
 
-  let smer = "Neznámý"
-
-  if(vlak.bearing != null){
-    smer =
-      vlak.bearing > 180
-        ? "Zličín"
-        : "Černý Most"
-  }
+ let smer =
+  vlak.direction || "Neznámý"
 
   let stav = "Neznámý"
 
@@ -2309,7 +2303,8 @@ metroInterval = setInterval(() => {
 
     const detail =
       await response.json()
-
+vlak.direction =
+  detail.trip_headsign || ""
     const stops =
   detail.stop_times?.features || []
 
