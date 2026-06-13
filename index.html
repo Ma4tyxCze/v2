@@ -2087,6 +2087,7 @@ const leftSegmentTrains =
   segmentTrains.filter(v =>
     (v.bearing || 0) >= 180
   )
+
 const rightSegmentTrains =
   segmentTrains.filter(v =>
     (v.bearing || 0) < 180
@@ -2302,15 +2303,7 @@ metroInterval = setInterval(() => {
 
     const detail =
       await response.json()
-
-    window.metroDirections =
-  window.metroDirections || {}
-
-window.metroDirections[vlak.tripId] =
-  detail.trip_headsign || ""
-    
-    vlak.direction =
-  detail.trip_headsign || ""
+ 
     const stops =
   detail.stop_times?.features || []
 
