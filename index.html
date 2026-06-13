@@ -2084,14 +2084,32 @@ if(index < metroBStations.length-1){
   const segmentTrains =
     trainsBetweenStations[segmentKey] || []
 const leftSegmentTrains =
-  segmentTrains.filter(v =>
-    (v.bearing || 0) >= 180
-  )
+  segmentTrains.filter(v => {
+
+    if(
+      segmentKey ===
+      "Anděl|Smíchovské nádraží"
+    ){
+      return (v.bearing || 0) >= 220
+    }
+
+    return (v.bearing || 0) >= 180
+
+  })
 
 const rightSegmentTrains =
-  segmentTrains.filter(v =>
-    (v.bearing || 0) < 180
-  )
+  segmentTrains.filter(v => {
+
+    if(
+      segmentKey ===
+      "Anděl|Smíchovské nádraží"
+    ){
+      return (v.bearing || 0) < 220
+    }
+
+    return (v.bearing || 0) < 180
+
+  })
   html += `
   <div style="
     position:relative;
