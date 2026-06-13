@@ -1809,6 +1809,33 @@ async function openMetroPopup(isRefresh = false){
 
     const data = await res.json()
 
+window.metroDirections =
+  window.metroDirections || {}
+
+for (const vlak of data) {
+
+  if (
+    window.metroDirections[vlak.tripId]
+  ) {
+    continue
+  }
+
+  try {
+
+    const r = await fetch(
+      "https://prohozy-api.marty-protiva.workers.dev/api/metro-detail?tripId=" +
+      encodeURIComponent(vlak.tripId)
+    )
+
+    const d = await r.json()
+
+    window.metroDirections[vlak.tripId] =
+      d.trip_headsign || ""
+
+  } catch(e) {}
+
+}
+    
     let html = ""
 
    data.sort((a,b) => {
@@ -2084,32 +2111,16 @@ if(index < metroBStations.length-1){
   const segmentTrains =
     trainsBetweenStations[segmentKey] || []
 const leftSegmentTrains =
-  segmentTrains.filter(v => {
-
-    if(
-      segmentKey ===
-      "Anděl|Smíchovské nádraží"
-    ){
-      return (v.bearing || 0) >= 220
-    }
-
-    return (v.bearing || 0) >= 180
-
-  })
+  segmentTrains.filter(v =>
+    window.metroDirections?.[v.tripId]
+      === "Zličín"
+  )
 
 const rightSegmentTrains =
-  segmentTrains.filter(v => {
-
-    if(
-      segmentKey ===
-      "Anděl|Smíchovské nádraží"
-    ){
-      return (v.bearing || 0) < 220
-    }
-
-    return (v.bearing || 0) < 180
-
-  })
+  segmentTrains.filter(v =>
+    window.metroDirections?.[v.tripId]
+      === "Černý Most"
+  )
   html += `
   <div style="
     position:relative;
@@ -2321,7 +2332,14 @@ metroInterval = setInterval(() => {
 
     const detail =
       await response.json()
- 
+
+window.metroDirections =
+  window.metroDirections || {}
+
+window.metroDirections[vlak.tripId] =
+  d.trip_headsign ||
+  "UNKNOWN"
+    
     const stops =
   detail.stop_times?.features || []
 
