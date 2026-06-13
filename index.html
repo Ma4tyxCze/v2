@@ -2085,12 +2085,12 @@ if(index < metroBStations.length-1){
     trainsBetweenStations[segmentKey] || []
 const leftSegmentTrains =
   segmentTrains.filter(v =>
-    (v.bearing || 0) >= 180
+    v.direction === "Zličín"
   )
 
 const rightSegmentTrains =
   segmentTrains.filter(v =>
-    (v.bearing || 0) < 180
+    v.direction === "Černý Most"
   )
   html += `
   <div style="
