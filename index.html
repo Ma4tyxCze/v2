@@ -855,16 +855,16 @@ const gvdSelect=document.getElementById("gvdSelect")
   "Můstek": [50.0840,14.4230],
   "Národní třída": [50.0810,14.4190],
   "Karlovo náměstí": [50.0755,14.4180],
-  "Anděl": [50.0710,14.4040],
-  "Smíchovské nádraží": [50.0618,14.4090],
-  "Radlická": [50.0581,14.3878],
-  "Jinonice": [50.0540,14.3690],
-  "Nové Butovice": [50.0508,14.3522],
-  "Hůrka": [50.0492,14.3420],
-  "Lužiny": [50.0480,14.3310],
-  "Luka": [50.0459,14.3210],
-  "Stodůlky": [50.0450,14.3080],
-  "Zličín": [50.0549,14.2890]
+  "Anděl": [50.070026,14.40367],
+"Smíchovské nádraží": [50.061284,14.408972],
+"Radlická": [50.058166,14.387843],
+"Jinonice": [50.054286,14.369789],
+"Nové Butovice": [50.050932,14.352166],
+"Hůrka": [50.050073,14.34281],
+"Lužiny": [50.044549,14.330468],
+"Luka": [50.045726,14.321439],
+"Stodůlky": [50.046749,14.30626],
+"Zličín": [50.053284,14.291211]
 }
 // 🔥 označení čísla + posun do středu obrazovky (mobil)
 input.addEventListener("focus", function() {
@@ -1883,9 +1883,50 @@ if(vlak.state === "at_stop" && station){
 
 }
 
-if(vlak.state === "on_track"){
+if(
+  vlak.state === "on_track" &&
+  bestStationIndex >= 0
+){
 
-  trainsOnTrack.push(vlak)
+  const stationName =
+    metroBStations[bestStationIndex]
+
+  const stationLat =
+    metroCoords[stationName][0]
+
+  const stationLon =
+    metroCoords[stationName][1]
+
+  const distanceToStation =
+    Math.abs(vlak.lat - stationLat) +
+    Math.abs(vlak.lon - stationLon)
+
+  let segmentIndex =
+    bestStationIndex
+
+  if(
+    distanceToStation < 0.003 &&
+    bestStationIndex < metroBStations.length - 1
+  ){
+    segmentIndex =
+      bestStationIndex + 1
+  }
+
+  if(
+    segmentIndex > 0 &&
+    segmentIndex < metroBStations.length
+  ){
+
+    const key =
+      metroBStations[segmentIndex - 1]
+      + "|"
+      + metroBStations[segmentIndex]
+
+    if(trainsBetweenStations[key]){
+      trainsBetweenStations[key].push(vlak)
+    }
+
+  }
 
 }
   if(vlak.state === "before_track"){
@@ -1908,28 +1949,30 @@ for(let i=0;i<metroBStations.length-1;i++){
   const lat2 = metroCoords[s2][0]
   const lon2 = metroCoords[s2][1]
 
-  const midLat = (lat1 + lat2) / 2
-  const midLon = (lon1 + lon2) / 2
+ let bestStationIndex = -1
+let bestDistance = Infinity
+
+for(let i=0;i<metroBStations.length;i++){
+
+  const station =
+    metroBStations[i]
+
+  const lat =
+    metroCoords[station][0]
+
+  const lon =
+    metroCoords[station][1]
 
   const distance =
-    Math.abs(vlak.lat - midLat) +
-    Math.abs(vlak.lon - midLon)
+    Math.abs(vlak.lat - lat) +
+    Math.abs(vlak.lon - lon)
 
   if(distance < bestDistance){
 
     bestDistance = distance
-    bestSegment = s1 + "|" + s2
+    bestStationIndex = i
 
   }
-
-}
-if(
-  vlak.state === "on_track" &&
-  bestSegment
-){
-
-  trainsBetweenStations[bestSegment]
-    .push(vlak)
 
 }
 
