@@ -1869,13 +1869,38 @@ metroBStations.forEach(station=>{
 })
 
 data.forEach(vlak => {
-let bestSegment = null
-let bestDistance = Infinity
+
   const station =
     nearestStation(
       vlak.lat,
       vlak.lon
     )
+  let bestStationIndex = -1
+let bestDistanceToStation = Infinity
+
+for(let i=0;i<metroBStations.length;i++){
+
+  const stationName =
+    metroBStations[i]
+
+  const lat =
+    metroCoords[stationName][0]
+
+  const lon =
+    metroCoords[stationName][1]
+
+  const distance =
+    Math.abs(vlak.lat - lat) +
+    Math.abs(vlak.lon - lon)
+
+  if(distance < bestDistanceToStation){
+
+    bestDistanceToStation = distance
+    bestStationIndex = i
+
+  }
+
+}
 if(vlak.state === "at_stop" && station){
 
   trainsAtStation[station]
@@ -1938,43 +1963,7 @@ if(
   }
 
 }
-for(let i=0;i<metroBStations.length-1;i++){
 
-  const s1 = metroBStations[i]
-  const s2 = metroBStations[i+1]
-
-  const lat1 = metroCoords[s1][0]
-  const lon1 = metroCoords[s1][1]
-
-  const lat2 = metroCoords[s2][0]
-  const lon2 = metroCoords[s2][1]
-
- let bestStationIndex = -1
-let bestDistance = Infinity
-
-for(let i=0;i<metroBStations.length;i++){
-
-  const station =
-    metroBStations[i]
-
-  const lat =
-    metroCoords[station][0]
-
-  const lon =
-    metroCoords[station][1]
-
-  const distance =
-    Math.abs(vlak.lat - lat) +
-    Math.abs(vlak.lon - lon)
-
-  if(distance < bestDistance){
-
-    bestDistance = distance
-    bestStationIndex = i
-
-  }
-
-}
 
 })
     function getSegmentPosition(v, s1, s2){
