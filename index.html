@@ -1875,95 +1875,86 @@ data.forEach(vlak => {
       vlak.lat,
       vlak.lon
     )
-  let bestStationIndex = -1
-let bestDistanceToStation = Infinity
 
-for(let i=0;i<metroBStations.length;i++){
+  if(
+    vlak.state === "at_stop" &&
+    station
+  ){
 
-  const stationName =
-    metroBStations[i]
-
-  const lat =
-    metroCoords[stationName][0]
-
-  const lon =
-    metroCoords[stationName][1]
-
-  const distance =
-    Math.abs(vlak.lat - lat) +
-    Math.abs(vlak.lon - lon)
-
-  if(distance < bestDistanceToStation){
-
-    bestDistanceToStation = distance
-    bestStationIndex = i
+    trainsAtStation[station]
+      .push(vlak)
 
   }
 
-}
-if(vlak.state === "at_stop" && station){
+  let bestSegment = null
+  let bestDistance = Infinity
 
-  trainsAtStation[station]
-    .push(vlak)
-
-}
-
-if(
-  vlak.state === "on_track" &&
-  bestStationIndex >= 0
-){
-
-  const stationName =
-    metroBStations[bestStationIndex]
-
-  const stationLat =
-    metroCoords[stationName][0]
-
-  const stationLon =
-    metroCoords[stationName][1]
-
-  const distanceToStation =
-    Math.abs(vlak.lat - stationLat) +
-    Math.abs(vlak.lon - stationLon)
-
-  let segmentIndex =
-    bestStationIndex
-
-  if(
-    distanceToStation < 0.003 &&
-    bestStationIndex < metroBStations.length - 1
-  ){
-    segmentIndex =
-      bestStationIndex + 1
-  }
-
-  if(
-    segmentIndex > 0 &&
-    segmentIndex < metroBStations.length
+  for(
+    let i = 0;
+    i < metroBStations.length - 1;
+    i++
   ){
 
-    const key =
-      metroBStations[segmentIndex - 1]
-      + "|"
-      + metroBStations[segmentIndex]
+    const s1 =
+      metroBStations[i]
 
-    if(trainsBetweenStations[key]){
-      trainsBetweenStations[key].push(vlak)
+    const s2 =
+      metroBStations[i + 1]
+
+    const lat1 =
+      metroCoords[s1][0]
+
+    const lon1 =
+      metroCoords[s1][1]
+
+    const lat2 =
+      metroCoords[s2][0]
+
+    const lon2 =
+      metroCoords[s2][1]
+
+    const midLat =
+      (lat1 + lat2) / 2
+
+    const midLon =
+      (lon1 + lon2) / 2
+
+    const distance =
+      Math.abs(vlak.lat - midLat) +
+      Math.abs(vlak.lon - midLon)
+
+    if(distance < bestDistance){
+
+      bestDistance =
+        distance
+
+      bestSegment =
+        s1 + "|" + s2
+
     }
 
   }
 
-}
-  if(vlak.state === "before_track"){
+  if(
+    vlak.state === "on_track" &&
+    bestSegment
+  ){
 
-  if(vlak.lon > 14.45){
-    beforeTrackCernyMost.push(vlak)
-  }else{
-    beforeTrackZlicin.push(vlak)
+    trainsBetweenStations[
+      bestSegment
+    ].push(vlak)
+
   }
 
-}
+  if(vlak.state === "before_track"){
 
+    if(vlak.lon > 14.45){
+      beforeTrackCernyMost.push(vlak)
+    }else{
+      beforeTrackZlicin.push(vlak)
+    }
+
+  }
 
 })
     function getSegmentPosition(v, s1, s2){
