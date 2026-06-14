@@ -1794,13 +1794,16 @@ function openContactsPdf(){
 
 async function openMetroPopup(isRefresh = false){
 
- if(!isRefresh){
-  document.getElementById("metroPopup").style.display = "flex"
-}
+  const currentScroll =
+    document.getElementById("metroPopup")
+      ?.scrollTop || 0
+
+  if(!isRefresh){
+    document.getElementById("metroPopup").style.display = "flex"
+  }
 
   document.getElementById("metroLine").innerHTML =
     "Načítám Metro B..."
-
   try{
 
     const res = await fetch(
@@ -2276,9 +2279,6 @@ if(index === metroBStations.length - 1){
   `
 }
 })
-const currentScroll =
-  document.getElementById("metroPopup")
-    .scrollTop
 
 document.getElementById("metroLine").innerHTML =
   html
