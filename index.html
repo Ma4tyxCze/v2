@@ -2276,20 +2276,21 @@ if(index === metroBStations.length - 1){
   `
 }
 })
-
-const metroPopup =
-  document.getElementById("metroPopup")
-
 const currentScroll =
-  metroPopup.scrollTop    
+  document.getElementById("metroPopup")
+    .scrollTop
 
+document.getElementById("metroLine").innerHTML =
+  html
 
-    document.getElementById("metroLine").innerHTML =
-      html
+setTimeout(() => {
 
+  document.getElementById("metroPopup")
+    .scrollTop = currentScroll
+
+}, 0)
     
-metroPopup.scrollTop =
-  currentScroll
+
 
   }catch(e){
 
