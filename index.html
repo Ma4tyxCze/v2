@@ -523,9 +523,8 @@ overflow-y:auto;
   z-index:100000;
 }
 .metroContent{
-padding:20px 60px;
+padding:20px 30px 20px 90px;
 padding-top:70px;
-transform:translateX(-30px);
 }
 
 .metroClose{
@@ -1938,11 +1937,11 @@ data.forEach(vlak => {
     }
 
   }
-
-  if(
-    vlak.state === "on_track" &&
-    bestSegment
-  ){
+if(
+  vlak.state !== "before_track" &&
+  vlak.state !== "at_stop" &&
+  bestSegment
+){
 
     trainsBetweenStations[
       bestSegment
@@ -2029,10 +2028,17 @@ if(index === 0){
 
 const leftTrains =
   trainsAtStation[station]
-    .filter(v =>
-      window.metroDirections?.[v.tripId]
-        === "Zličín"
-    )
+    .filter(v => {
+
+      const direction =
+        window.metroDirections?.[v.tripId]
+
+      return (
+        !direction ||
+        direction === "Zličín"
+      )
+
+    })
 
 const rightTrains =
   trainsAtStation[station]
@@ -2144,10 +2150,17 @@ if(index < metroBStations.length-1){
   const segmentTrains =
     trainsBetweenStations[segmentKey] || []
 const leftSegmentTrains =
-  segmentTrains.filter(v =>
-    window.metroDirections?.[v.tripId]
-      === "Zličín"
-  )
+  segmentTrains.filter(v => {
+
+    const direction =
+      window.metroDirections?.[v.tripId]
+
+    return (
+      !direction ||
+      direction === "Zličín"
+    )
+
+  })
 
 const rightSegmentTrains =
   segmentTrains.filter(v =>
