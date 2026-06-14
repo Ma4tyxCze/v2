@@ -2277,7 +2277,7 @@ if(index === metroBStations.length - 1){
 }
 })
 const currentScroll =
-  document.getElementById("metroPopup")
+  document.getElementById("metroContent")
     .scrollTop
 
 document.getElementById("metroLine").innerHTML =
@@ -2285,11 +2285,10 @@ document.getElementById("metroLine").innerHTML =
 
 setTimeout(() => {
 
-  document.getElementById("metroPopup")
+  document.getElementById("metroContent")
     .scrollTop = currentScroll
 
 }, 0)
-    
 
 
   }catch(e){
@@ -2616,7 +2615,7 @@ Spustit proužek
     ✖
   </div>
 
-  <div class="metroContent">
+  <div id="metroContent" class="metroContent">
 
     <h2>🚇 Metro B Live</h2>
 
