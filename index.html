@@ -2025,11 +2025,17 @@ if(index === 0){
 
 const leftTrains =
   trainsAtStation[station]
-    .filter(v => (v.bearing || 0) > 180)
+    .filter(v =>
+      window.metroDirections?.[v.tripId]
+        === "Zličín"
+    )
 
 const rightTrains =
   trainsAtStation[station]
-    .filter(v => (v.bearing || 0) <= 180)
+    .filter(v =>
+      window.metroDirections?.[v.tripId]
+        === "Černý Most"
+    )
 
 return `
 
