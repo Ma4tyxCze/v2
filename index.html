@@ -2014,13 +2014,14 @@ if(index === 0){
     </div>
   `
 }
-  html += `
+ html += `
   <div style="
     display:flex;
     align-items:center;
     justify-content:center;
     min-height:70px;
     position:relative;
+    transform:translateX(-20px);
   ">
 
   ${
@@ -2153,10 +2154,11 @@ const rightSegmentTrains =
     window.metroDirections?.[v.tripId]
       === "Černý Most"
   )
-  html += `
+html += `
   <div style="
     position:relative;
     height:70px;
+    transform:translateX(-20px);
   ">
 
     <div style="
