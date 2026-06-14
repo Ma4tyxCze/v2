@@ -2302,7 +2302,17 @@ if(metroInterval){
 }
 
 metroInterval = setInterval(() => {
-  openMetroPopup(true)
+
+  const popup =
+    document.getElementById("metroPopup")
+
+  if(
+    popup &&
+    popup.style.display === "flex"
+  ){
+    openMetroPopup(true)
+  }
+
 }, 20000)
 }
 
