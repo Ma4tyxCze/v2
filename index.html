@@ -351,6 +351,25 @@ align-items:center;
 white-space: pre-line;  /* řádek v boxu */
 }
 
+.pdfZoomBtn{
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  background:#333;
+  color:#FFD400;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:24px;
+  font-weight:bold;
+
+  cursor:pointer;
+}
+  
 .notfound{
 color:#ff6b6b;
 margin-top:10px;
@@ -965,6 +984,9 @@ let userEmail = localStorage.getItem("prohozy_user")
 let selectedSheet="50"
 let savedScrollY = 0
 let metroInterval = null
+let pdfScale = 1
+let currentPdfUrl = ""
+let currentPdfTitle = ""
   const input=document.getElementById("shiftInput")
 const result=document.getElementById("result")
 const gvdSelect=document.getElementById("gvdSelect")
@@ -1918,9 +1940,9 @@ async function checkAppVersion(){
 }
 function openContactsPdf(){
 
-  openPdf(
+  window.open(
     "./pdfs/kontakty.pdf",
-    "Kontakty"
+    "_blank"
   )
 }
 
@@ -2671,7 +2693,8 @@ function closeTrainPopup(){
 }
 
 async function openPdf(url, title){
- 
+ currentPdfUrl = url
+currentPdfTitle = title
   document.getElementById("pdfViewer")
     .style.display = "block"
 
@@ -2710,10 +2733,10 @@ for(
     const page =
       await pdf.getPage(pageNum)
 
-    const viewport =
-      page.getViewport({
-        scale:1
-      })
+   const viewport =
+  page.getViewport({
+    scale:pdfScale
+  })
 
     const canvas =
       document.createElement("canvas")
@@ -2781,7 +2804,24 @@ wrapper.appendChild(canvas)
   document.body.style.overflow =
     ""
 }
+function changePdfZoom(change){
 
+  pdfScale += change
+
+  if(pdfScale < 0.8){
+    pdfScale = 0.8
+  }
+
+  if(pdfScale > 3){
+    pdfScale = 3
+  }
+
+  openPdf(
+    currentPdfUrl,
+    currentPdfTitle
+  )
+
+}
 </script>
  <div id="statsPopup" class="contactPopup">
 
@@ -2862,11 +2902,31 @@ Spustit proužek
       PDF
     </div>
 
-    <div
-      class="pdfCloseBtn"
-      onclick="closePdfViewer()">
-      ✖
-    </div>
+   <div style="
+display:flex;
+gap:10px;
+align-items:center;
+">
+
+  <div
+    class="pdfZoomBtn"
+    onclick="changePdfZoom(-0.2)">
+    −
+  </div>
+
+  <div
+    class="pdfZoomBtn"
+    onclick="changePdfZoom(0.2)">
+    +
+  </div>
+
+  <div
+    class="pdfCloseBtn"
+    onclick="closePdfViewer()">
+    ✖
+  </div>
+
+</div>
 
   </div>
 
