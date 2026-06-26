@@ -1452,8 +1452,9 @@ function contactAdmin(phone){
 </script>
 <script>
 function openCurrentPdf(){
-console.log("URL:", url)
-console.log("TITLE:", title)
+console.log("selectedSheet:", selectedSheet)
+ 
+console.log("pdfjs:", window.pdfjsLib)
   if(!selectedSheet){
     alert("Není vybrané GVD")
     return
@@ -2642,7 +2643,10 @@ function closeTrainPopup(){
 }
 
 async function openPdf(url, title){
-
+ console.log("PDF URL:", url)
+  console.log("PDF TITLE:", title)
+  console.log("pdfjs:", window.pdfjsLib)
+ 
   document.getElementById("pdfViewer")
     .style.display = "block"
 
@@ -2655,9 +2659,16 @@ async function openPdf(url, title){
   pages.innerHTML =
     "Načítám PDF..."
 
- const pdf =
+  if(!url){
+  alert("URL PDF je prázdné")
+  return
+}
+
+const pdf =
   await window.pdfjsLib
-    .getDocument(url)
+    .getDocument({
+      url: url
+    })
     .promise
 
   pages.innerHTML = ""
