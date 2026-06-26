@@ -96,8 +96,9 @@ body.android #splashCircle{
   background:#111;
   display:none;
   z-index:99999;
+   overscroll-behavior:contain;
   overflow-y:auto;
-   touch-action:pan-y pinch-zoom;
+  -webkit-overflow-scrolling:touch;
 }
 
 .pdfHeader{
@@ -115,9 +116,6 @@ body.android #splashCircle{
   display:flex;
   justify-content:space-between;
   align-items:center;
-
-  padding:0 20px;
-
   border-bottom:1px solid #333;
 
   z-index:10;
@@ -132,8 +130,6 @@ body.android #splashCircle{
  #pdfPages{
   padding:20px;
   padding-top:25px;
-    overflow:auto;
-    touch-action:pinch-zoom;
 }
 #pdfPages canvas{
   width:100%;
@@ -166,19 +162,6 @@ body.android #splashCircle{
   cursor:pointer;
 }
 
-#pdfPages{
-  padding:15px;
-}
-
-#pdfPages canvas{
-  width:100%;
-  height:auto;
-
-  margin-bottom:15px;
-
-  background:white;
-  border-radius:12px;
-}
 /* APP */
 
 .container{
@@ -1472,9 +1455,7 @@ function contactAdmin(phone){
 </script>
 <script>
 function openCurrentPdf(){
-console.log("selectedSheet:", selectedSheet)
- 
-console.log("pdfjs:", window.pdfjsLib)
+
   if(!selectedSheet){
     alert("Není vybrané GVD")
     return
@@ -2663,9 +2644,6 @@ function closeTrainPopup(){
 }
 
 async function openPdf(url, title){
- console.log("PDF URL:", url)
-  console.log("PDF TITLE:", title)
-  console.log("pdfjs:", window.pdfjsLib)
  
   document.getElementById("pdfViewer")
     .style.display = "block"
@@ -2728,7 +2706,7 @@ const pdf =
   }
 
   document.body.style.overflow =
-    "hidden"
+    "fixed"
 }
   function closePdfViewer(){
 
