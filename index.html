@@ -1436,13 +1436,9 @@ function openCurrentPdf(){
   const url =
     "./pdfs/gvd_" + selectedSheet + ".pdf"
 
-  document.getElementById("pdfViewer")
-    .style.display = "block"
+  window.open(url, "_blank")
 
-  document.getElementById("pdfFrame")
-    .src = url
-
-  document.body.style.overflow = "hidden"
+  showToast("Pro návrat přejeď prstem doleva")
 }
 
 async function openStatsPopup(){
@@ -1875,13 +1871,11 @@ async function checkAppVersion(){
 }
 function openContactsPdf(){
 
-  document.getElementById("pdfViewer")
-    .style.display = "block"
+  const url = "./pdfs/kontakty.pdf"
 
-  document.getElementById("pdfFrame")
-    .src = "./pdfs/kontakty.pdf"
+  window.open(url, "_blank")
 
-  document.body.style.overflow = "hidden"
+  showToast("Pro návrat přejeď prstem doleva")
 }
 
 async function openMetroPopup(isRefresh = false){
