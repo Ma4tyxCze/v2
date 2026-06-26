@@ -97,7 +97,7 @@ body.android #splashCircle{
   display:none;
   z-index:99999;
    overscroll-behavior:contain;
-  overflow-y:auto;
+   overflow:auto;
   -webkit-overflow-scrolling:touch;
 }
 
@@ -988,7 +988,7 @@ let userEmail = localStorage.getItem("prohozy_user")
 let selectedSheet="50"
 let savedScrollY = 0
 let metroInterval = null
-let pdfScale = 1
+let pdfScale = 0.7
 let currentPdfUrl = ""
 let currentPdfTitle = ""
   const input=document.getElementById("shiftInput")
@@ -2813,7 +2813,7 @@ wrapper.appendChild(canvas)
 function changePdfZoom(change){
 
   pdfScale += change
-  
+  console.log(pdfScale)
   if(pdfScale < 0.8){
     pdfScale = 0.8
   }
