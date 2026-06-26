@@ -102,11 +102,7 @@ body.android #splashCircle{
 .pdfHeader{
   position:sticky;
   top:0;
- padding:
-    calc(env(safe-area-inset-top) + 10px)
-    20px
-    10px
-    20px;
+ padding-top:45px;
   height:60px;
 
   background:#111;
@@ -1456,7 +1452,8 @@ function contactAdmin(phone){
 </script>
 <script>
 function openCurrentPdf(){
-
+console.log("URL:", url)
+console.log("TITLE:", title)
   if(!selectedSheet){
     alert("Není vybrané GVD")
     return
