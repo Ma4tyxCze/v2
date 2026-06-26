@@ -90,49 +90,69 @@ body.android #splashCircle{
 }
 
 /* PDF VIEWER */
-
 #pdfViewer{
-position:fixed;
-inset:0;
-background:#111;
-display:none;
-z-index:9999;
+  position:fixed;
+  inset:0;
+  background:#111;
+  display:none;
+  z-index:99999;
+  overflow-y:auto;
 }
 
-#pdfFrame{
-width:100%;
-height:100%;
-border:none;
-overflow:auto;
--webkit-overflow-scrolling: touch;
+.pdfHeader{
+  position:sticky;
+  top:0;
+
+  height:60px;
+
+  background:#111;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:0 20px;
+
+  border-bottom:1px solid #333;
+
+  z-index:10;
 }
 
-/* tlačítko zavřít */
+#pdfTitle{
+  color:#FFD400;
+  font-size:18px;
+  font-weight:bold;
+}
 
 .pdfCloseBtn{
-position:absolute;
-right:20px;
-  top:60px;
+  width:42px;
+  height:42px;
 
-width:44px;
-height:44px;
+  border-radius:50%;
 
-border-radius:50%;
+  background:#FFD400;
+  color:black;
 
-background:#FFD400;
-color:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-display:flex;
-align-items:center;
-justify-content:center;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-font-size:20px;
-font-weight:bold;
+#pdfPages{
+  padding:15px;
+}
 
-box-shadow:0 0 6px rgba(0,0,0,0.5);
-cursor:pointer;
+#pdfPages canvas{
+  width:100%;
+  height:auto;
 
-z-index:10000;
+  margin-bottom:15px;
+
+  background:white;
+  border-radius:12px;
 }
 /* APP */
 
@@ -1433,12 +1453,14 @@ function openCurrentPdf(){
     return
   }
 
-  const url =
-    "./pdfs/gvd_" + selectedSheet + ".pdf"
+  openPdf(
+    "./pdfs/gvd_" +
+    selectedSheet +
+    ".pdf",
 
-  window.open(url, "_blank")
-
-  showToast("Pro návrat přejeď prstem doleva")
+    "GVD " +
+    selectedSheet
+  )
 }
 
 async function openStatsPopup(){
@@ -1687,16 +1709,6 @@ function roundRect(
 
 }
  
-function closePdfViewer(){
-
-  document.getElementById("pdfViewer")
-    .style.display = "none"
-
-  document.getElementById("pdfFrame")
-    .src = ""
-
-  document.body.style.overflow = ""
-}
 async function setTicker(btn){
 
   const od =
@@ -1871,11 +1883,10 @@ async function checkAppVersion(){
 }
 function openContactsPdf(){
 
-  const url = "./pdfs/kontakty.pdf"
-
-  window.open(url, "_blank")
-
-  showToast("Pro návrat přejeď prstem doleva")
+  openPdf(
+    "./pdfs/kontakty.pdf",
+    "Kontakty"
+  )
 }
 
 async function openMetroPopup(isRefresh = false){
@@ -2623,6 +2634,75 @@ function closeTrainPopup(){
     .style.display = "none"
 
 }
+
+async function openPdf(url, title){
+
+  document.getElementById("pdfViewer")
+    .style.display = "block"
+
+  document.getElementById("pdfTitle")
+    .innerText = title
+
+  const pages =
+    document.getElementById("pdfPages")
+
+  pages.innerHTML =
+    "Načítám PDF..."
+
+  const pdf =
+    await pdfjsLib.getDocument(url).promise
+
+  pages.innerHTML = ""
+
+  for(
+    let pageNum = 1;
+    pageNum <= pdf.numPages;
+    pageNum++
+  ){
+
+    const page =
+      await pdf.getPage(pageNum)
+
+    const viewport =
+      page.getViewport({
+        scale:1.6
+      })
+
+    const canvas =
+      document.createElement("canvas")
+
+    const ctx =
+      canvas.getContext("2d")
+
+    canvas.width =
+      viewport.width
+
+    canvas.height =
+      viewport.height
+
+    await page.render({
+      canvasContext:ctx,
+      viewport
+    }).promise
+
+    pages.appendChild(canvas)
+  }
+
+  document.body.style.overflow =
+    "hidden"
+}
+  function closePdfViewer(){
+
+  document.getElementById("pdfViewer")
+    .style.display = "none"
+
+  document.getElementById("pdfPages")
+    .innerHTML = ""
+
+  document.body.style.overflow =
+    ""
+}
+
 </script>
  <div id="statsPopup" class="contactPopup">
 
@@ -2695,14 +2775,23 @@ Spustit proužek
 
   </div>
 </div>
-<!-- PDF VIEWER -->
 <div id="pdfViewer">
 
-  <div class="pdfCloseBtn" onclick="closePdfViewer()">
-    ✖
+  <div class="pdfHeader">
+
+    <div id="pdfTitle">
+      PDF
+    </div>
+
+    <div
+      class="pdfCloseBtn"
+      onclick="closePdfViewer()">
+      ✖
+    </div>
+
   </div>
 
-  <iframe id="pdfFrame"></iframe>
+  <div id="pdfPages"></div>
 
 </div>
 <div id="trainPopup" class="contactPopup">
@@ -2738,5 +2827,16 @@ Spustit proužek
   </div>
 
 </div>
+<script type="module">
+
+import * as pdfjsLib
+from "./pdfjs/pdf.mjs"
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "./pdfjs/pdf.worker.mjs"
+
+window.pdfjsLib = pdfjsLib
+
+</script>
 </body>
 </html>
