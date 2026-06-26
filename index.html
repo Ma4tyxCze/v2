@@ -1434,12 +1434,15 @@ function openCurrentPdf(){
   }
 
   const url =
-  "./pdfs/gvd_" + selectedSheet + ".pdf"
+    "./pdfs/gvd_" + selectedSheet + ".pdf"
 
-  window.open(url, "_blank")
+  document.getElementById("pdfViewer")
+    .style.display = "block"
 
-  // malé info pro uživatele
-  showToast("Pro návrat přejeď prstem doleva")
+  document.getElementById("pdfFrame")
+    .src = url
+
+  document.body.style.overflow = "hidden"
 }
 
 async function openStatsPopup(){
@@ -1690,9 +1693,13 @@ function roundRect(
  
 function closePdfViewer(){
 
-  document.getElementById("pdfViewer").style.display = "none"
-  document.getElementById("pdfFrame").src = ""
+  document.getElementById("pdfViewer")
+    .style.display = "none"
 
+  document.getElementById("pdfFrame")
+    .src = ""
+
+  document.body.style.overflow = ""
 }
 async function setTicker(btn){
 
@@ -1868,11 +1875,13 @@ async function checkAppVersion(){
 }
 function openContactsPdf(){
 
-  const url = "./pdfs/kontakty.pdf"
+  document.getElementById("pdfViewer")
+    .style.display = "block"
 
-  window.open(url, "_blank")
+  document.getElementById("pdfFrame")
+    .src = "./pdfs/kontakty.pdf"
 
-  showToast("Pro návrat přejeď prstem doleva")
+  document.body.style.overflow = "hidden"
 }
 
 async function openMetroPopup(isRefresh = false){
