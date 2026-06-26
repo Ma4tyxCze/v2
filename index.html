@@ -149,6 +149,7 @@ box-sizing:border-box;
   margin:-60px auto -60px auto;/* 👈 KLÍČ */
   display:block;
   filter:drop-shadow(0 0 18px #FFD400);
+   pointer-events:none;
 }
 
 .appTitle{
@@ -635,7 +636,8 @@ height:48px;
 font-size:16px;
 }
   .logoRow{
-position:relative;
+ position:relative;
+  z-index:1;
 display:flex;
 justify-content:center;
 }
@@ -674,7 +676,8 @@ pointer-events:none;
   justify-content:center;
   align-items:center;
   gap:20px;
-
+position:relative;
+  z-index:1000;
   width:fit-content;
   max-width:95%;
 
@@ -693,7 +696,7 @@ pointer-events:none;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-
+  pointer-events:auto;
   min-width:65px;
 
   color:white;
@@ -713,6 +716,7 @@ pointer-events:none;
 .menuItem:hover{
   color:#FFD400;
 }
+ 
 
   .contactBtn,
 .metroBtn,
