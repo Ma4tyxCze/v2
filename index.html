@@ -1509,7 +1509,7 @@ function contactAdmin(phone){
 <script>
 function openCurrentPdf(){
 
-   pdfScale = 1
+   pdfScale = 0.7
   
   if(!selectedSheet){
     alert("Není vybrané GVD")
@@ -2705,7 +2705,8 @@ currentPdfTitle = title
     .style.display = "block"
 
   document.getElementById("pdfTitle")
-    .innerText = title
+  .innerText =
+    `${title} (${Math.round(pdfScale * 100)}%)`
 
   const pages =
     document.getElementById("pdfPages")
@@ -2813,7 +2814,7 @@ wrapper.appendChild(canvas)
 function changePdfZoom(change){
 
   pdfScale += change
-  console.log(pdfScale)
+ 
   if(pdfScale < 0.8){
     pdfScale = 0.8
   }
@@ -2916,13 +2917,13 @@ align-items:center;
 
   <div
     class="pdfZoomBtn"
-    onclick="changePdfZoom(-0.2)">
+    onclick="changePdfZoom(-0.5)">
     −
   </div>
 
   <div
     class="pdfZoomBtn"
-    onclick="changePdfZoom(0.2)">
+    onclick="changePdfZoom(0.5)">
     +
   </div>
 
