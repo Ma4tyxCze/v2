@@ -111,8 +111,8 @@ overflow:auto;
 
 .pdfCloseBtn{
 position:absolute;
-right:40px;
-top:40px;
+right:20px;
+  top:60px;
 
 width:44px;
 height:44px;
@@ -313,6 +313,30 @@ padding:16px;
 box-sizing:border-box;
 }
 
+  .popupClose{
+  position:absolute;
+  top:12px;
+  right:12px;
+
+  width:36px;
+  height:36px;
+
+  border-radius:50%;
+
+  background:#FFD400;
+  color:black;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:bold;
+  cursor:pointer;
+}
+  .contactBox{
+  position:relative;
+}
+  
 .popupBox{
 background:#1b1b1b;
 padding:20px;
@@ -654,7 +678,7 @@ pointer-events:none;
   width:fit-content;
   max-width:95%;
 
-  margin:20px auto 10px auto;
+ margin:45px auto 15px auto;
   padding:12px 22px;
 
   background:#1b1b1b;
@@ -2666,6 +2690,10 @@ Spustit proužek
 <div id="contactPopup" class="contactPopup">
   <div class="contactBox">
 
+    <div class="popupClose"
+         onclick="closeContactPopup()">
+      ✖
+    </div>
     <h3>Kontaktovat správce</h3>
 
     <button onclick="contactAdmin('420737023287')">
