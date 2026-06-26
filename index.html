@@ -147,6 +147,7 @@ body.android #splashCircle{
 .pdfPage{
   position:relative;
   margin-bottom:20px;
+  width:100%;
 }
 
 .textLayer{
@@ -2695,20 +2696,23 @@ const pdf =
     })
     .promise
 
-  pages.innerHTML = ""
+ pages.innerHTML = ""
 
-  for(
-    let pageNum = 1;
-    pageNum <= pdf.numPages;
-    pageNum++
-  ){
+const enableText =
+  title === "Kontakty"
+
+for(
+  let pageNum = 1;
+  pageNum <= pdf.numPages;
+  pageNum++
+){
 
     const page =
       await pdf.getPage(pageNum)
 
     const viewport =
       page.getViewport({
-        scale:1.6
+        scale:1
       })
 
     const canvas =
@@ -2719,12 +2723,6 @@ const pdf =
 
 wrapper.className =
   "pdfPage"
-
-wrapper.style.width =
-  viewport.width + "px"
-
-wrapper.style.height =
-  viewport.height + "px"
     
     const ctx =
       canvas.getContext("2d")
@@ -2741,28 +2739,31 @@ wrapper.style.height =
     }).promise
 wrapper.appendChild(canvas)
     pages.appendChild(wrapper)
-    const textLayer =
-  document.createElement("div")
+   if(enableText){
 
-textLayer.className =
-  "textLayer"
+  const textLayer =
+    document.createElement("div")
 
-wrapper.appendChild(textLayer)
+  textLayer.className =
+    "textLayer"
 
-const textContent =
-  await page.getTextContent()
+  wrapper.appendChild(textLayer)
 
-await window.pdfjsLib.renderTextLayer({
-  textContentSource:
-    textContent,
+  const textContent =
+    await page.getTextContent()
 
-  container:
-    textLayer,
+  await window.pdfjsLib.renderTextLayer({
+    textContentSource:
+      textContent,
 
-  viewport:
-    viewport
-})
-  }
+    container:
+      textLayer,
+
+    viewport:
+      viewport
+  })
+
+}
 
   document.body.style.overflow =
     "fixed"
