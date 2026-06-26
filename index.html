@@ -97,12 +97,17 @@ body.android #splashCircle{
   display:none;
   z-index:99999;
   overflow-y:auto;
+   touch-action:pan-y pinch-zoom;
 }
 
 .pdfHeader{
   position:sticky;
   top:0;
- padding-top:45px;
+ padding:
+    calc(env(safe-area-inset-top) + 12px)
+    20px
+    12px
+    20px;
   height:60px;
 
   background:#111;
@@ -124,9 +129,24 @@ body.android #splashCircle{
   font-weight:bold;
 }
 
-  #pdfPages{
+ #pdfPages{
   padding:20px;
-  padding-top:30px;
+  padding-top:25px;
+    overflow:auto;
+    touch-action:pinch-zoom;
+}
+#pdfPages canvas{
+  width:100%;
+  height:auto;
+
+  display:block;
+  margin:0 auto 20px auto;
+
+  background:white;
+  border-radius:12px;
+
+  box-shadow:
+    0 2px 10px rgba(0,0,0,.35);
 }
   
 .pdfCloseBtn{
