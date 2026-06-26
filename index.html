@@ -645,7 +645,50 @@ width:32px;   /* 👈 větší */
 height:32px;
 pointer-events:none;
 }
+.topMenu{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
 
+.menuItem{
+  background:#1b1b1b;
+  border:1px solid #333;
+  border-radius:16px;
+
+  width:80px;
+  height:70px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+}
+
+.menuItem:active{
+  transform:scale(0.96);
+}
+
+.menuItem span{
+  font-size:12px;
+  margin-top:4px;
+}
+
+.menuItem:hover{
+  border-color:#FFD400;
+}
+
+  .contactBtn,
+.metroBtn,
+.pdfBtn,
+.statsBtn{
+  display:none !important;
+}
   /* TICKER ADMIN FORM */
 
 .tickerRow{
@@ -728,7 +771,33 @@ Aplikace neobsahuje žádné reklamy, stahování souborů ani sběr osobních �
   📊
 </div>
 </div>
-  
+ <div class="topMenu">
+
+  <div class="menuItem" onclick="openContactsPdf()">
+    ☎️
+    <span>Kontakty</span>
+  </div>
+
+  <div class="menuItem" onclick="openMetroPopup()">
+    🚇
+    <span>IČV (test)</span>
+  </div>
+
+  <div
+    class="menuItem statsMenu"
+    onclick="openStatsPopup()"
+    style="display:none"
+  >
+    📊
+    <span>Statistiky</span>
+  </div>
+
+  <div class="menuItem" onclick="openCurrentPdf()">
+    📄
+    <span>Směny</span>
+  </div>
+
+</div> 
 <h1 class="appTitle">Prohozy</h1>
 <div id="tickerWrapper">
 
@@ -932,7 +1001,8 @@ const admins = [
 ]
 
 if(admins.includes(userEmail)){
-  document.querySelector(".statsBtn").style.display = "flex"
+ document.querySelector(".statsMenu").style.display =
+  "flex"
 }
   
   document.getElementById("loginScreen").style.display="none"
@@ -1082,9 +1152,9 @@ btn.innerText="Odeslat"
 }
 
 function openPopup(){
- document.querySelector(".contactBtn").style.display = "none";
-  document.querySelector(".pdfBtn").style.display = "none";
-  document.querySelector(".statsBtn").style.display = "none";
+document.querySelector(".contactBtn").style.display = "flex";
+document.querySelector(".pdfBtn").style.display = "flex";
+document.querySelector(".statsBtn").style.display = "flex";
   savedScrollY = window.scrollY
   document.getElementById("popup").style.display="flex"
 
