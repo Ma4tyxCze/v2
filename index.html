@@ -3,7 +3,6 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover,maximum-scale=5">
 
 <title>Prohozy</title>
 
@@ -88,111 +87,6 @@ transition: opacity .4s ease;
 body.android #splashCircle{
   animation:none;
 }
-
-/* PDF VIEWER */
-#pdfViewer{
-  position:fixed;
-  inset:0;
-  background:#111;
-  display:none;
-  z-index:99999;
-   overscroll-behavior:contain;
-   overflow:auto;
-  -webkit-overflow-scrolling:touch;
-}
-
-.pdfHeader{
-  position:sticky;
-  top:0;
- padding:
-    calc(env(safe-area-inset-top) + 12px)
-    20px
-    12px
-    20px;
-  height:60px;
-
-  background:#111;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #333;
-
-  z-index:10;
-}
-
-#pdfTitle{
-  color:#FFD400;
-  font-size:18px;
-  font-weight:bold;
-}
-
-#pdfPages{
-  padding:20px;
-  padding-top:25px;
-  overflow-x:auto;
-}
-#pdfPages canvas{
- width:auto;
-  max-width:none;
-  height:auto;
-
-  display:block;
-  margin:0 auto 20px auto;
-
-  background:white;
-  border-radius:12px;
-
-  box-shadow:
-    0 2px 10px rgba(0,0,0,.35);
-}
-.pdfPage{
-  position:relative;
-  margin-bottom:20px;
-  width:max-content;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-.textLayer{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-
-  opacity:0.25;
-
-  line-height:1;
-  transform-origin:0 0;
-
-  user-select:text;
-  -webkit-user-select:text;
-}
-
-.textLayer span{
-  position:absolute;
-  color:transparent;
-  white-space:pre;
-  cursor:text;
-  transform-origin:0 0;
-}
-  
-.pdfCloseBtn{
-  width:42px;
-  height:42px;
-
-  border-radius:50%;
-
-  background:#FFD400;
-  color:black;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-weight:bold;
-  cursor:pointer;
-}
-
 /* APP */
 
 .container{
@@ -353,25 +247,6 @@ min-height:60px;
 display:flex;
 align-items:center;
 white-space: pre-line;  /* řádek v boxu */
-}
-
-.pdfZoomBtn{
-  width:42px;
-  height:42px;
-
-  border-radius:50%;
-
-  background:#333;
-  color:#FFD400;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:24px;
-  font-weight:bold;
-
-  cursor:pointer;
 }
   
 .notfound{
@@ -988,13 +863,10 @@ let userEmail = localStorage.getItem("prohozy_user")
 let selectedSheet="50"
 let savedScrollY = 0
 let metroInterval = null
-let pdfScale = 0.45
-let currentPdfUrl = ""
-let currentPdfTitle = ""
-  const input=document.getElementById("shiftInput")
+const input=document.getElementById("shiftInput")
 const result=document.getElementById("result")
 const gvdSelect=document.getElementById("gvdSelect")
-  const metroBStations = [
+const metroBStations = [
 "Černý Most",
 "Rajská zahrada",
 "Hloubětín",
@@ -1509,20 +1381,14 @@ function contactAdmin(phone){
 <script>
 function openCurrentPdf(){
 
-   pdfScale = 0.45
-  
   if(!selectedSheet){
     alert("Není vybrané GVD")
     return
   }
 
-  openPdf(
-    "./pdfs/gvd_" +
-    selectedSheet +
-    ".pdf",
-
-    "GVD " +
-    selectedSheet
+  window.open(
+    "./pdfs/gvd_" + selectedSheet + ".pdf",
+    "_blank"
   )
 }
 
@@ -2697,138 +2563,6 @@ function closeTrainPopup(){
     .style.display = "none"
 
 }
-
-async function openPdf(url, title){
- currentPdfUrl = url
-currentPdfTitle = title
-  document.getElementById("pdfViewer")
-    .style.display = "block"
-
-  document.getElementById("pdfTitle")
-  .innerText =
-    `${title} (${Math.round(pdfScale * 100)}%)`
-
-  const pages =
-    document.getElementById("pdfPages")
-
-  pages.innerHTML =
-    "Načítám PDF..."
-
-  if(!url){
-  alert("URL PDF je prázdné")
-  return
-}
-
-const pdf =
-  await window.pdfjsLib
-    .getDocument({
-      url: url
-    })
-    .promise
-
- pages.innerHTML = ""
-
-const enableText =
-  title === "Kontakty"
-
-for(
-  let pageNum = 1;
-  pageNum <= pdf.numPages;
-  pageNum++
-){
-
-    const page =
-      await pdf.getPage(pageNum)
-
-   const viewport =
-  page.getViewport({
-    scale:pdfScale
-  })
-
-    const canvas =
-      document.createElement("canvas")
-
-  const wrapper =
-  document.createElement("div")
-
-wrapper.className =
-  "pdfPage"
-    
-    const ctx =
-      canvas.getContext("2d")
-
-    canvas.width =
-      viewport.width
-
-    canvas.height =
-      viewport.height
-
-    await page.render({
-      canvasContext:ctx,
-      viewport
-    }).promise
-wrapper.appendChild(canvas)
-    pages.appendChild(wrapper)
-   if(enableText){
-
-  const textLayer =
-    document.createElement("div")
-
-  textLayer.className =
-    "textLayer"
-
-  wrapper.appendChild(textLayer)
-
-  const textContent =
-    await page.getTextContent()
-
-  await window.pdfjsLib.renderTextLayer({
-    textContentSource:
-      textContent,
-
-    container:
-      textLayer,
-
-    viewport:
-      viewport
-  })
-
-}
-
-  document.body.style.overflow =
-  "hidden"
-
-}
-}
-  function closePdfViewer(){
-
-  document.getElementById("pdfViewer")
-    .style.display = "none"
-
-  document.getElementById("pdfPages")
-    .innerHTML = ""
-
-  document.body.style.overflow =
-    ""
-}
-function changePdfZoom(change){
-
-  pdfScale += change
- 
-  if(pdfScale < 0.8){
-    pdfScale = 0.8
-  }
-
-  if(pdfScale > 3){
-    pdfScale = 3
-  }
-
-  openPdf(
-    currentPdfUrl,
-    currentPdfTitle
-  )
-
-}
 </script>
  <div id="statsPopup" class="contactPopup">
 
@@ -2877,69 +2611,6 @@ Spustit proužek
   </div>
 
 </div>
-  <!-- 🔥 Popup s kontakty -->
-<div id="contactPopup" class="contactPopup">
-  <div class="contactBox">
-
-    <div class="popupClose"
-         onclick="closeContactPopup()">
-      ✖
-    </div>
-    <h3>Kontaktovat správce</h3>
-
-    <button onclick="contactAdmin('420737023287')">
-     Martin Protiva
-    </button>
-
-    <button onclick="contactAdmin('420608463502')">
-     Martin Mrázek
-    </button>
-
-    <button onclick="closeContactPopup()">
-      Zrušit
-    </button>
-
-  </div>
-</div>
-<div id="pdfViewer">
-
-  <div class="pdfHeader">
-
-    <div id="pdfTitle">
-      PDF
-    </div>
-
-   <div style="
-display:flex;
-gap:10px;
-align-items:center;
-">
-
-  <div
-    class="pdfZoomBtn"
-    onclick="changePdfZoom(-0.5)">
-    −
-  </div>
-
-  <div
-    class="pdfZoomBtn"
-    onclick="changePdfZoom(0.5)">
-    +
-  </div>
-
-  <div
-    class="pdfCloseBtn"
-    onclick="closePdfViewer()">
-    ✖
-  </div>
-
-</div>
-
-  </div>
-
-  <div id="pdfPages"></div>
-
-</div>
 <div id="trainPopup" class="contactPopup">
 
   <div class="contactBox">
@@ -2973,16 +2644,5 @@ align-items:center;
   </div>
 
 </div>
-<script type="module">
-
-import * as pdfjsLib
-from "./pdfjs/pdf.mjs"
-
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "./pdfjs/pdf.worker.mjs"
-
-window.pdfjsLib = pdfjsLib
-
-</script>
 </body>
 </html>
