@@ -11,7 +11,7 @@
 
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon_32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon_16.png">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="apple-touch-icon" href="/icons/icon_ios_180v2.png?v=3">
 <meta name="description" content="Interní aplikace pro evidenci směn zaměstnanců metra.">
 <meta name="robots" content="noindex">
@@ -127,12 +127,14 @@ body.android #splashCircle{
   font-weight:bold;
 }
 
- #pdfPages{
+#pdfPages{
   padding:20px;
   padding-top:25px;
+  overflow-x:auto;
 }
 #pdfPages canvas{
-  width:100%;
+ width:auto;
+  max-width:none;
   height:auto;
 
   display:block;
@@ -147,7 +149,9 @@ body.android #splashCircle{
 .pdfPage{
   position:relative;
   margin-bottom:20px;
-  width:100%;
+  width:max-content;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .textLayer{
@@ -1505,6 +1509,8 @@ function contactAdmin(phone){
 <script>
 function openCurrentPdf(){
 
+   pdfScale = 1
+  
   if(!selectedSheet){
     alert("Není vybrané GVD")
     return
@@ -2807,7 +2813,7 @@ wrapper.appendChild(canvas)
 function changePdfZoom(change){
 
   pdfScale += change
-
+  
   if(pdfScale < 0.8){
     pdfScale = 0.8
   }
