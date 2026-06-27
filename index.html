@@ -803,8 +803,8 @@ Aplikace neobsahuje žádné reklamy, stahování souborů ani sběr osobních �
 
 <div class="topBar">
 <select id="gvdSelect">
-<option value="50">Všední den 50</option>
-<!-- <option value="44">Sobota 44</option>
+<!-- <option value="50">Všední den 50</option>
+<option value="44">Sobota 44</option>
 <option value="45">Neděle 45</option> -->
 <option value="51">Prázdniny Všední den 51</option>
 <option value="47">Prázdniny Sobota 47</option>
@@ -829,9 +829,9 @@ Před odesláním kontrolujte správnost GVD a číslo směny
 </p>
 <div class="formRow">
   <select id="formGvd">
-    <option value="50">Všední den 50</option>
+   <!-- <option value="50">Všední den 50</option>
     <option value="44">Sobota 44</option>
-    <option value="45">Neděle 45</option>
+    <option value="45">Neděle 45</option> -->
     <option value="51">Prázdniny Všední den 51</option>
     <option value="47">Prázdniny Sobota 47</option>
     <option value="48">Prázdniny Neděle 48</option>   
@@ -1004,7 +1004,7 @@ if(admins.includes(userEmail)){
     selectedSheet = "48" // neděle
   } 
   else {
-    selectedSheet = "50" // pracovní den
+    selectedSheet = "51" // pracovní den
   }
 
   gvdSelect.value = selectedSheet
