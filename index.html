@@ -1384,15 +1384,18 @@ function contactAdmin(phone){
 <script>
 function openCurrentPdf(){
 
-  alert(
-    "GVD = " + selectedSheet +
-    "\nPDF test"
-  )
+  if(!selectedSheet){
+    alert("Není vybrané GVD")
+    return
+  }
 
-  window.open(
-    "https://www.google.com",
-    "_blank"
-  )
+  const url =
+    "/pdfs/gvd_" +
+    selectedSheet +
+    ".pdf?v=" +
+    Date.now()
+
+  location.href = url
 }
 async function openStatsPopup(){
 
