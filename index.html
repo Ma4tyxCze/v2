@@ -803,12 +803,13 @@ Aplikace neobsahuje žádné reklamy, stahování souborů ani sběr osobních �
 
 <div class="topBar">
 <select id="gvdSelect">
-<!-- <option value="50">Všední den 50</option>
-<option value="44">Sobota 44</option>
+<option value="50">Všední den 50b</option>
+<option value="53">Víkend 53b</option>
+<!-- <option value="44">Sobota 44</option>
 <option value="45">Neděle 45</option> -->
-<option value="51">Prázdniny Všední den 51</option>
+<!-- <option value="51">Prázdniny Všední den 51</option>
 <option value="47">Prázdniny Sobota 47</option>
-<option value="48">Prázdniny Neděle 48</option>
+<option value="48">Prázdniny Neděle 48</option> -->
 </select> 
 
 <button class="addBtn" onclick="openPopup()">Přidat<br>prohoz</button>
@@ -829,12 +830,13 @@ Před odesláním kontrolujte správnost GVD a číslo směny
 </p>
 <div class="formRow">
   <select id="formGvd">
-   <!-- <option value="50">Všední den 50</option>
-    <option value="44">Sobota 44</option>
+   <option value="50">Všední den 50b</option>
+    <option value="53">Víkend 53b</option>
+    <!-- <option value="44">Sobota 44</option>
     <option value="45">Neděle 45</option> -->
-    <option value="51">Prázdniny Všední den 51</option>
+    <!-- <option value="51">Prázdniny Všední den 51</option>
     <option value="47">Prázdniny Sobota 47</option>
-    <option value="48">Prázdniny Neděle 48</option>   
+    <option value="48">Prázdniny Neděle 48</option>   -->
   </select>
 
   <input 
@@ -998,13 +1000,13 @@ if(admins.includes(userEmail)){
   const day = today.getDay() // 0 = neděle, 6 = sobota
 
   if(day === 6){
-    selectedSheet = "47" // sobota
+    selectedSheet = "53" // sobota
   } 
   else if(day === 0){
-    selectedSheet = "48" // neděle
+    selectedSheet = "53" // neděle
   } 
   else {
-    selectedSheet = "51" // pracovní den
+    selectedSheet = "50" // pracovní den
   }
 
   gvdSelect.value = selectedSheet
