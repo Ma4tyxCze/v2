@@ -806,6 +806,7 @@ Aplikace neobsahuje žádné reklamy, stahování souborů ani sběr osobních �
 <select id="gvdSelect">
 <option value="50">Všední den 50b</option>
 <option value="53">Víkend 53b</option>
+<option value="52">Poloprázdniny 52</option>
 <!-- <option value="44">Sobota 44</option>
 <option value="45">Neděle 45</option> -->
 <!-- <option value="51">Prázdniny Všední den 51</option>
@@ -833,6 +834,7 @@ Před odesláním kontrolujte správnost GVD a číslo směny
   <select id="formGvd">
    <option value="50">Všední den 50b</option>
     <option value="53">Víkend 53b</option>
+    <option value="52">Poloprázdniny 52</option>
     <!-- <option value="44">Sobota 44</option>
     <option value="45">Neděle 45</option> -->
     <!-- <option value="51">Prázdniny Všední den 51</option>
@@ -877,8 +879,8 @@ const metroBStations = [
 "Vysočanská",
 "Českomoravská",
 "Palmovka",
-    "Invalidovna",
-  "Křižíkova",
+"Invalidovna",
+"Křižíkova",
 "Florenc",
 "Náměstí Republiky",
 "Můstek",
@@ -997,20 +999,27 @@ if(admins.includes(userEmail)){
 
   loadTicker()
     
-  const today = new Date()
-  const day = today.getDay() // 0 = neděle, 6 = sobota
+ const today = new Date()
+const day = today.getDay()
 
-  if(day === 6){
-    selectedSheet = "53" // sobota
-  } 
-  else if(day === 0){
-    selectedSheet = "53" // neděle
-  } 
-  else {
-    selectedSheet = "50" // pracovní den
-  }
+const todayKey =
+  today.getFullYear() + "-" +
+  String(today.getMonth() + 1).padStart(2, "0") + "-" +
+  String(today.getDate()).padStart(2, "0")
 
-  gvdSelect.value = selectedSheet
+const isGvd52Day =
+  todayKey === "2026-10-29" ||
+  todayKey === "2026-10-30"
+
+if (isGvd52Day) {
+  selectedSheet = "52"
+} else if (day === 0 || day === 6) {
+  selectedSheet = "53"
+} else {
+  selectedSheet = "50"
+}
+
+gvdSelect.value = selectedSheet
 
   showInstallBanner()
 
