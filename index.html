@@ -702,6 +702,31 @@ pointer-events:none;
   overflow:hidden;
   resize:none;
 }
+
+  /* Úprava vlastního prohozu */
+.box {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prohozText {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.editProhozBtn {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 10px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 </head>
 
@@ -861,7 +886,21 @@ Před odesláním kontrolujte správnost GVD a číslo směny
 
 </div>
 </div>
+<!-- POPUP ÚPRAVY PROHOZU -->
+<div id="editPopup" class="popup">
+  <div class="popupBox">
 
+    <h2>Upravit prohoz</h2>
+
+    <textarea id="editText"></textarea>
+
+    <div class="popupButtons">
+      <button onclick="saveEditProhoz(this)">Uložit změny</button>
+      <button onclick="closeEditPopup()">Zrušit</button>
+    </div>
+
+  </div>
+</div>
 <script>
 
 let userEmail = localStorage.getItem("prohozy_user")
@@ -1069,37 +1108,70 @@ this.blur()
 findShift(value)
 })
 
-async function findShift(smena){
-const res = await fetch("https://prohozy-api.marty-protiva.workers.dev/api/find?gvd="+selectedSheet+"&smena="+smena)
-const data = await res.json()
-
-if(!data.found){
-result.innerHTML="<div class='notfound'>Tady zatím nikdo nic nepřidal</div>"
-return
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
 }
 
-let html=""
-let valid=false
+async function findShift(smena) {
+  const res = await fetch(
+    "https://prohozy-api.marty-protiva.workers.dev/api/find?gvd=" +
+    selectedSheet + "&smena=" + smena
+  );
 
-data.data.forEach(row=>{
-let text=row[1]
-if(text && text.trim()!==""){
-valid=true
-html+="<div class='box' onclick='copyText(this)'>"+text+"</div>"
-}
-})
+  const data = await res.json();
 
-if(!valid){
-result.innerHTML="<div class='notfound'>Tady zatím nikdo nic nepřidal</div>"
-return
-}
+  if (!data.found) {
+    result.innerHTML = "<div class='notfound'>Tady zatím nikdo nic nepřidal</div>";
+    return;
+  }
 
-result.innerHTML=html
+  let html = "";
+  let valid = false;
 
-const firstBox=result.querySelector(".box")
-if(firstBox){
-firstBox.scrollIntoView({behavior:"smooth",block:"center"})
-}
+  data.data.forEach(row => {
+    const text = row[1] || "";
+    const id = row[2] || "";
+    const author = (row[3] || "").trim().toLowerCase();
+
+    if (text.trim() !== "") {
+      valid = true;
+
+      const isOwner = id && userEmail &&
+        author === userEmail.trim().toLowerCase();
+
+      html += `
+        <div class="box" onclick="copyText(this.querySelector('.prohozText'))">
+          <div class="prohozText">${escapeHtml(text)}</div>
+          ${isOwner ? `
+            <button class="editProhozBtn"
+              data-id="${escapeHtml(id)}"
+              data-text="${escapeHtml(text)}"
+              onclick="event.stopPropagation(); editProhozFromButton(this)">
+              ✏️
+            </button>
+          ` : ""}
+        </div>
+      `;
+    }
+  });
+
+  if (!valid) {
+    result.innerHTML = "<div class='notfound'>Tady zatím nikdo nic nepřidal</div>";
+    return;
+  }
+
+  result.innerHTML = html;
+
+  const firstBox = result.querySelector(".box");
+  if (firstBox) {
+    firstBox.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 }
 
 async function sendProhoz(btn){
@@ -1201,6 +1273,105 @@ document.getElementById("popup").addEventListener("click", function(e) {
   }
 });
 
+// ===== ÚPRAVA PROHOZU =====
+
+let currentEditId = "";
+
+function editProhozFromButton(btn) {
+  currentEditId = btn.dataset.id;
+
+  document.getElementById("editText").value =
+    btn.dataset.text;
+
+  savedScrollY = window.scrollY;
+
+  document.getElementById("editPopup").style.display = "flex";
+
+  // Zmrazení stránky stejně jako u přidání prohozu
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${savedScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+}
+
+function closeEditPopup() {
+  document.activeElement.blur();
+
+  document.getElementById("editPopup").style.display = "none";
+
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+
+  window.scrollTo(0, savedScrollY);
+
+  currentEditId = "";
+}
+
+async function saveEditProhoz(btn) {
+  const text = document.getElementById("editText").value.trim();
+
+  if (!text) {
+    alert("Text prohozu nemůže být prázdný");
+    return;
+  }
+
+  if (!currentEditId) {
+    alert("Chybí ID prohozu");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "Ukládám...";
+
+  try {
+    const res = await fetch(
+      "https://prohozy-api.marty-protiva.workers.dev/api/edit",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: currentEditId,
+          text: text,
+          email: userEmail
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.ok) {
+      alert("Chyba při ukládání: " + (data.error || "Neznámá chyba"));
+      return;
+    }
+
+    closeEditPopup();
+
+    showToast("Prohoz upraven");
+
+    if (input.value.length === 3) {
+      findShift(input.value);
+    }
+
+  } catch (e) {
+    alert("Chyba spojení se serverem");
+    console.log(e);
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "Uložit změny";
+  }
+}
+
+// Zavření kliknutím mimo okno
+document.getElementById("editPopup").addEventListener("click", function(e) {
+  if (e.target === this) {
+    closeEditPopup();
+  }
+});
+  
   function copyText(el){
 navigator.clipboard.writeText(el.innerText)
 showToast("Text zkopírován")
