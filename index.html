@@ -717,15 +717,20 @@ pointer-events:none;
 }
 
 .editProhozBtn {
-  flex: 0 0 38px;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border-radius: 10px;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  padding: 4px 0 4px 8px;
+  background: transparent;
+  color: #FFD400;
+  font-size: 12px;
+  font-weight: normal;
+  border-radius: 0;
+  text-decoration: underline;
+}
+
+.editProhozBtn:hover {
+  color: #FFD400;
 }
 </style>
 </head>
@@ -1153,7 +1158,7 @@ async function findShift(smena) {
               data-id="${escapeHtml(id)}"
               data-text="${escapeHtml(text)}"
               onclick="event.stopPropagation(); editProhozFromButton(this)">
-              ✏️
+              Upravit
             </button>
           ` : ""}
         </div>
