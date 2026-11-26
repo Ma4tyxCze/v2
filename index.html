@@ -708,6 +708,8 @@ pointer-events:none;
   position: relative;
   justify-content: space-between;
   gap: 12px;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .prohozText {
@@ -750,13 +752,18 @@ pointer-events:none;
 }
 
 .rosterDetail {
-  display: inline-block;
+  display: block;
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
   color: #FFD400;
   background: #333;
-  border-radius: 6px;
-  padding: 4px 8px;
-  margin-top: 6px;
-  font-size: 0.9em;
+  border: 1px solid #555;
+  border-radius: 7px;
+  padding: 5px 9px;
+  margin-top: 8px;
+  font-size: 0.88em;
 }
 
 </style>
