@@ -735,6 +735,30 @@ pointer-events:none;
 .editProhozBtn:hover {
   color: #FFD400;
 }
+
+/* Klikací směny z denního rozpisu */
+.rosterShiftLink {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #FFD400 !important;
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+  display: inline;
+}
+
+.rosterDetail {
+  display: inline-block;
+  color: #FFD400;
+  background: #333;
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin-top: 6px;
+  font-size: 0.9em;
+}
+
 </style>
 </head>
 
@@ -1126,6 +1150,90 @@ function escapeHtml(text) {
   })[char]);
 }
 
+let dailyRosterCache = {
+  loadedAt: 0,
+  roster: {}
+};
+
+async function loadDailyRoster() {
+  // Rozpis obnovujeme maximálně jednou za 5 minut.
+  if (Date.now() - dailyRosterCache.loadedAt < 300000) {
+    return dailyRosterCache.roster;
+  }
+
+  try {
+    const response = await fetch(
+      "https://prohozy-api.marty-protiva.workers.dev/api/roster?email=" +
+      encodeURIComponent(userEmail || "")
+    );
+
+    if (!response.ok) {
+      throw new Error("Roster HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    dailyRosterCache = {
+      loadedAt: Date.now(),
+      roster: data.found ? (data.roster || {}) : {}
+    };
+
+    return dailyRosterCache.roster;
+
+  } catch (error) {
+    console.error("Chyba načítání denního rozpisu:", error);
+    // Chyba rozpisu nesmí zastavit běžné vyhledávání prohozů.
+    return dailyRosterCache.roster || {};
+  }
+}
+
+function renderProhozText(text, roster) {
+  return escapeHtml(text).replace(/\b(\d{3})\b/g, (match) => {
+    if (!roster[match]) {
+      return match;
+    }
+
+    return `<button
+      type="button"
+      class="rosterShiftLink"
+      data-roster-number="${match}"
+      onclick="showRosterShift(event,this)"
+    >${match}</button>`;
+  });
+}
+
+function showRosterShift(event, element) {
+  event.stopPropagation();
+
+  const number = element.dataset.rosterNumber;
+  const item = dailyRosterCache.roster[number];
+
+  if (!item) return;
+
+  const box = element.closest(".box");
+  if (!box) return;
+
+  // Zavřeme případný předchozí detail v tomto prohozu.
+  const existing = box.querySelector(".rosterDetail");
+  if (existing) {
+    const sameDetail = existing.dataset.rosterDetail === number;
+    existing.remove();
+
+    if (sameDetail) return;
+  }
+
+  const detail = document.createElement("div");
+  detail.className = "rosterDetail";
+  detail.dataset.rosterDetail = number;
+  detail.textContent = `${item.shift} – ${item.name}`;
+
+  // Detail je mimo .prohozText, takže se nepřidá do kopírovaného textu.
+  const textElement = box.querySelector(".prohozText");
+  if (textElement) {
+    textElement.insertAdjacentElement("afterend", detail);
+  }
+}
+
 async function findShift(smena) {
   const res = await fetch(
     "https://prohozy-api.marty-protiva.workers.dev/api/find?gvd=" +
@@ -1138,6 +1246,9 @@ async function findShift(smena) {
     result.innerHTML = "<div class='notfound'>Tady zatím nikdo nic nepřidal</div>";
     return;
   }
+
+  // Načtení dnešního rozpisu. Když není dostupný, prohozy fungují dál.
+  const roster = await loadDailyRoster();
 
   let html = "";
   let valid = false;
@@ -1155,7 +1266,7 @@ async function findShift(smena) {
 
       html += `
         <div class="box" onclick="copyText(this.querySelector('.prohozText'))">
-          <div class="prohozText">${escapeHtml(text)}</div>
+          <div class="prohozText">${renderProhozText(text, roster)}</div>
           ${isOwner ? `
             <button class="editProhozBtn"
               data-id="${escapeHtml(id)}"
