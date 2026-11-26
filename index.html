@@ -751,17 +751,43 @@ pointer-events:none;
   display: inline;
 }
 
-.rosterDetailBox {
-  min-height: 0;
-  padding: 10px 14px;
-  margin: -4px 0 12px 18px;
-  width: fit-content;
-  max-width: calc(100% - 18px);
+.rosterDetailOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
   box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.62);
+  animation: rosterOverlayIn .14s ease-out;
+}
+
+.rosterDetailPopup {
+  min-height: 0;
+  width: fit-content;
+  max-width: min(90vw, 420px);
+  box-sizing: border-box;
+  padding: 16px 22px;
   color: #FFD400;
-  font-size: 15px;
-  border-color: #555;
   background: #292929;
+  border: 1px solid #666;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.55);
+  font-size: 18px;
+  font-weight: bold;
+  animation: rosterPopupIn .16s ease-out;
+}
+
+@keyframes rosterOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rosterPopupIn {
+  from { transform: scale(.92); opacity: .5; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 </style>
@@ -1215,25 +1241,29 @@ function showRosterShift(event, element) {
 
   if (!item) return;
 
-  const sourceBox = element.closest(".box");
-  if (!sourceBox) return;
+  // Zavřeme případný předchozí detail.
+  const oldOverlay = document.getElementById("rosterDetailOverlay");
+  if (oldOverlay) oldOverlay.remove();
 
-  // Pokud už je pod tímto prohozem otevřený detail, zavřeme ho.
-  const existing = sourceBox.nextElementSibling;
-  if (existing && existing.classList.contains("rosterDetailBox")) {
-    const sameDetail = existing.dataset.rosterDetail === number;
-    existing.remove();
+  // Samostatná překryvná vrstva s detailem směny.
+  const overlay = document.createElement("div");
+  overlay.id = "rosterDetailOverlay";
+  overlay.className = "rosterDetailOverlay";
+  overlay.setAttribute("role", "button");
+  overlay.setAttribute("aria-label", "Zavřít detail směny");
 
-    if (sameDetail) return;
-  }
-
-  // Samostatný nový box pouze se směnou a jménem.
   const detail = document.createElement("div");
-  detail.className = "box rosterDetailBox";
-  detail.dataset.rosterDetail = number;
+  detail.className = "rosterDetailPopup";
   detail.textContent = `${item.shift} – ${item.name}`;
 
-  sourceBox.insertAdjacentElement("afterend", detail);
+  overlay.appendChild(detail);
+
+  // Kliknutí kamkoliv na vrstvu detail zavře.
+  overlay.addEventListener("click", function () {
+    overlay.remove();
+  });
+
+  document.body.appendChild(overlay);
 }
 
 async function findShift(smena) {
