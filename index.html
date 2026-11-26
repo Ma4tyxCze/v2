@@ -751,19 +751,17 @@ pointer-events:none;
   display: inline;
 }
 
-.rosterDetail {
-  display: block;
-  align-self: flex-start;
+.rosterDetailBox {
+  min-height: 0;
+  padding: 10px 14px;
+  margin: -4px 0 12px 18px;
   width: fit-content;
-  max-width: 100%;
+  max-width: calc(100% - 18px);
   box-sizing: border-box;
   color: #FFD400;
-  background: #333;
-  border: 1px solid #555;
-  border-radius: 7px;
-  padding: 5px 9px;
-  margin-top: 8px;
-  font-size: 0.88em;
+  font-size: 15px;
+  border-color: #555;
+  background: #292929;
 }
 
 </style>
@@ -1217,28 +1215,25 @@ function showRosterShift(event, element) {
 
   if (!item) return;
 
-  const box = element.closest(".box");
-  if (!box) return;
+  const sourceBox = element.closest(".box");
+  if (!sourceBox) return;
 
-  // Zavřeme případný předchozí detail v tomto prohozu.
-  const existing = box.querySelector(".rosterDetail");
-  if (existing) {
+  // Pokud už je pod tímto prohozem otevřený detail, zavřeme ho.
+  const existing = sourceBox.nextElementSibling;
+  if (existing && existing.classList.contains("rosterDetailBox")) {
     const sameDetail = existing.dataset.rosterDetail === number;
     existing.remove();
 
     if (sameDetail) return;
   }
 
+  // Samostatný nový box pouze se směnou a jménem.
   const detail = document.createElement("div");
-  detail.className = "rosterDetail";
+  detail.className = "box rosterDetailBox";
   detail.dataset.rosterDetail = number;
   detail.textContent = `${item.shift} – ${item.name}`;
 
-  // Detail je mimo .prohozText, takže se nepřidá do kopírovaného textu.
-  const textElement = box.querySelector(".prohozText");
-  if (textElement) {
-    textElement.insertAdjacentElement("afterend", detail);
-  }
+  sourceBox.insertAdjacentElement("afterend", detail);
 }
 
 async function findShift(smena) {
