@@ -1219,7 +1219,7 @@ async function loadDailyRoster() {
 }
 
 function renderProhozText(text, roster) {
-  return escapeHtml(text).replace(/\b(\d{3})b?\b/gi, (match, number) => {
+  return escapeHtml(text).replace(/\b(\d{1,3})(b)?\b/gi, (match, number) => {
     if (!roster[number]) {
       return match;
     }
@@ -1229,9 +1229,10 @@ function renderProhozText(text, roster) {
       class="rosterShiftLink"
       data-roster-number="${number}"
       onclick="showRosterShift(event,this)"
-    >${number}</button>`;
+    >${match}</button>`;
   });
 }
+  
 function showRosterShift(event, element) {
   event.stopPropagation();
 
